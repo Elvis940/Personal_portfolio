@@ -40,34 +40,34 @@ class ContactMessage(models.Model):
         FLEXIBLE = 'FLEXIBLE', 'Flexible'
         NOT_SPECIFIED = 'NOT_SPECIFIED', 'Not Specified'
     
-    # Contact Information
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    # Contact Information - INCREASED FIELD LENGTHS
+    first_name = models.CharField(max_length=100)  # Was 50
+    last_name = models.CharField(max_length=100)   # Was 50
     email = models.EmailField()
     phone = models.CharField(max_length=20, blank=True)
     
-    # Message Details
-    subject = models.CharField(max_length=200)
+    # Message Details - INCREASED FIELD LENGTHS
+    subject = models.CharField(max_length=300)  # Was 200
     project_type = models.CharField(
-        max_length=30,
+        max_length=50,  # Was 30 - THIS WAS THE MAIN ISSUE
         choices=ProjectType.choices,
         default=ProjectType.OTHER
     )
     budget = models.CharField(
-        max_length=20,
+        max_length=30,  # Was 20
         choices=BudgetRange.choices,
         default=BudgetRange.NOT_SPECIFIED
     )
     timeline = models.CharField(
-        max_length=20,
+        max_length=30,  # Was 20
         choices=Timeline.choices,
         default=Timeline.FLEXIBLE
     )
     message = models.TextField(validators=[MinLengthValidator(10)])
     
-    # Status Tracking
+    # Status Tracking - INCREASED FIELD LENGTHS
     status = models.CharField(
-        max_length=20,
+        max_length=30,  # Was 20
         choices=Status.choices,
         default=Status.NEW
     )
