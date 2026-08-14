@@ -49,9 +49,12 @@ problems." }}{% endblock %} {% block content %}
                             <i class="fas fa-file-pdf me-2"></i>Download CV
                         </a>
                         {% else %}
-                        <a href="#" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-file-pdf me-2"></i>Download CV
-                        </a>
+                       <!-- Hide the CV download button if no CV exists -->
+{% if profile and profile.resume_pdf %}
+    <a href="{{ profile.resume_pdf.url }}" target="_blank" class="btn btn-outline-primary btn-lg">
+        <i class="fas fa-file-pdf me-2"></i>Download CV
+    </a>
+{% endif %}
                         {% endif %}
                         <a href="{% url 'contact:contact' %}" class="btn btn-outline-secondary btn-lg">
                             <i class="fas fa-paper-plane me-2"></i>Contact Me
