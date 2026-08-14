@@ -23,6 +23,10 @@ __pycache__/
 db.sqlite3
 db.sqlite3-journal
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5a97179 (Add favicon files and update .gitignore)
 
 # IDE
 .vscode/

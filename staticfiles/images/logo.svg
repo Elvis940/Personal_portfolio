@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6C63FF" />
+      <stop offset="100%" style="stop-color:#3F3D9E" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#logoGrad)" stroke-width="8" />
+  
+  <!-- Inner Circle -->
+  <circle cx="100" cy="100" r="75" fill="url(#logoGrad)" opacity="0.1" />
+  
+  <!-- Code Brackets -->
+  <text x="55" y="115" font-family="'Courier New', monospace" font-size="60" font-weight="bold" fill="url(#logoGrad)">&lt;/&gt;</text>
+  
+  <!-- Small Decorative Dot -->
+  <circle cx="100" cy="170" r="4" fill="#6C63FF" opacity="0.5" />
+  
+  <!-- E Letter -->
+  <text x="85" y="140" font-family="'Arial', sans-serif" font-size="28" font-weight="bold" fill="url(#logoGrad)">E</text>
+</svg>
