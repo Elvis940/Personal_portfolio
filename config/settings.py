@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'ckeditor',
-    'cloudinary',  # Add this
-    'cloudinary_storage',  # Add this
+    'cloudinary',
+    'cloudinary_storage',
     
     # Local apps
     'apps.core',
@@ -58,15 +58,18 @@ INSTALLED_APPS = [
 # CLOUDINARY CONFIGURATION
 # ========================================
 
-# ========================================
-# CLOUDINARY CONFIGURATION
-# ========================================
-
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
-    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
-    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default='dnbjcrqml'),
+    'API_KEY': config('CLOUDINARY_API_KEY', default='682674164735159'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='f8JG-PTwseB9pccYqrIjarDu_Lw'),
 }
+
+# Initialize Cloudinary
+cloudinary.config(
+    cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+    api_key=CLOUDINARY_STORAGE['API_KEY'],
+    api_secret=CLOUDINARY_STORAGE['API_SECRET']
+)
 
 # Use Cloudinary for all media file uploads
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -241,3 +244,31 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# ========================================
+# FORCE CLOUDINARY STORAGE (OVERRIDE)
+# ========================================
+
+# This forces Cloudinary as the default storage
+# It overrides any other storage settings
+import django.core.files.storage
+from cloudinary_storage.storage import MediaCloudinaryStorage
+
+# Override the default storage
+django.core.files.storage.default_storage = MediaCloudinaryStorage()
+
+# Also update the global storage instance
+from django.core.files.storage import default_storage
+# Re-assign to ensure it takes effect
+default_storage = MediaCloudinaryStorage()
+
+print("✅ Cloudinary storage forced as default!")
+
+# ========================================
+# VERIFICATION (Optional - Remove in Production)
+# ========================================
+
+if DEBUG:
+    print(f"🔍 Cloudinary Cloud Name: {CLOUDINARY_STORAGE['CLOUD_NAME']}")
+    print(f"🔍 Default Storage: {DEFAULT_FILE_STORAGE}")
+    print("✅ Cloudinary configured successfully!")
