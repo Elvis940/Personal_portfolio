@@ -55,10 +55,10 @@ class Project(models.Model):
         IN_PROGRESS = 'IN_PROGRESS', 'In Progress'
         CONCEPT = 'CONCEPT', 'Concept'
     
-    # Basic Information
-    title = models.CharField(max_length=100)
+    # Basic Information - INCREASED FIELD LENGTHS
+    title = models.CharField(max_length=200)  # Was 100
     slug = models.SlugField(unique=True, blank=True)
-    summary = models.CharField(max_length=200)
+    summary = models.CharField(max_length=500)  # Was 200
     description = RichTextField(blank=True)
     
     # Project Details
@@ -93,7 +93,7 @@ class Project(models.Model):
     # Organization
     categories = models.ManyToManyField(ProjectCategory, blank=True)
     technologies = models.ManyToManyField(Technology, blank=True)
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.COMPLETED)
+    status = models.CharField(max_length=30, choices=Status.choices, default=Status.COMPLETED)  # Was 20
     
     # Dates
     start_date = models.DateField(blank=True, null=True)
@@ -105,9 +105,9 @@ class Project(models.Model):
     order = models.IntegerField(default=0)
     view_count = models.PositiveIntegerField(default=0)
     
-    # SEO
-    meta_title = models.CharField(max_length=100, blank=True)
-    meta_description = models.CharField(max_length=200, blank=True)
+    # SEO - INCREASED FIELD LENGTHS
+    meta_title = models.CharField(max_length=200, blank=True)  # Was 100
+    meta_description = models.CharField(max_length=300, blank=True)  # Was 200
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -121,9 +121,9 @@ class Project(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         if not self.meta_title:
-            self.meta_title = self.title
+            self.meta_title = self.title[:200]  # Truncate to new max
         if not self.meta_description:
-            self.meta_description = self.summary[:150]
+            self.meta_description = self.summary[:300]  # Truncate to new max
         super().save(*args, **kwargs)
     
     def __str__(self):
