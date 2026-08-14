@@ -40,34 +40,34 @@ class ContactMessage(models.Model):
         FLEXIBLE = 'FLEXIBLE', 'Flexible'
         NOT_SPECIFIED = 'NOT_SPECIFIED', 'Not Specified'
     
-    # Contact Information - INCREASED FIELD LENGTHS
-    first_name = models.CharField(max_length=100)  # Was 50
-    last_name = models.CharField(max_length=100)   # Was 50
-    email = models.EmailField()
-    phone = models.CharField(max_length=20, blank=True)
+    # Contact Information - BIG NUMBERS
+    first_name = models.CharField(max_length=1000)  # Was 100
+    last_name = models.CharField(max_length=1000)   # Was 100
+    email = models.EmailField(max_length=1000)      # Added max_length
+    phone = models.CharField(max_length=100, blank=True)  # Was 20
     
-    # Message Details - INCREASED FIELD LENGTHS
-    subject = models.CharField(max_length=300)  # Was 200
+    # Message Details - BIG NUMBERS
+    subject = models.CharField(max_length=1000)  # Was 300
     project_type = models.CharField(
-        max_length=50,  # Was 30 - THIS WAS THE MAIN ISSUE
+        max_length=100,  # Was 50
         choices=ProjectType.choices,
         default=ProjectType.OTHER
     )
     budget = models.CharField(
-        max_length=30,  # Was 20
+        max_length=100,  # Was 30
         choices=BudgetRange.choices,
         default=BudgetRange.NOT_SPECIFIED
     )
     timeline = models.CharField(
-        max_length=30,  # Was 20
+        max_length=100,  # Was 30
         choices=Timeline.choices,
         default=Timeline.FLEXIBLE
     )
     message = models.TextField(validators=[MinLengthValidator(10)])
     
-    # Status Tracking - INCREASED FIELD LENGTHS
+    # Status Tracking - BIG NUMBERS
     status = models.CharField(
-        max_length=30,  # Was 20
+        max_length=100,  # Was 30
         choices=Status.choices,
         default=Status.NEW
     )
@@ -76,7 +76,7 @@ class ContactMessage(models.Model):
     # Metadata
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
-    referrer = models.URLField(blank=True)
+    referrer = models.URLField(blank=True, max_length=1000)  # Added max_length
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
