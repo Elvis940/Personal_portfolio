@@ -58,11 +58,14 @@ INSTALLED_APPS = [
 # CLOUDINARY CONFIGURATION
 # ========================================
 
-# Cloudinary Configuration - Using your existing credentials
+# ========================================
+# CLOUDINARY CONFIGURATION
+# ========================================
+
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dnbjcrqml',
-    'API_KEY': '682674164735159',
-    'API_SECRET': 'f8JG-PTwseB9pccYqrIjarDu_Lw',
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
 }
 
 # Use Cloudinary for all media file uploads
