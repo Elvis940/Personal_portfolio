@@ -5,9 +5,9 @@ from django.core.validators import FileExtensionValidator
 class Testimonial(models.Model):
     """Client testimonials"""
     
-    name = models.CharField(max_length=100)
-    position = models.CharField(max_length=100, blank=True)
-    company = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=500)  # Was 100
+    position = models.CharField(max_length=500, blank=True)  # Was 100
+    company = models.CharField(max_length=500, blank=True)  # Was 100
     content = models.TextField()
     rating = models.PositiveIntegerField(
         default=5, 

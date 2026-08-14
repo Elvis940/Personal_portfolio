@@ -6,12 +6,12 @@ from django.core.validators import FileExtensionValidator
 class Service(models.Model):
     """Services offered"""
     
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True, blank=True)
+    name = models.CharField(max_length=500)  # Was 100
+    slug = models.SlugField(max_length=1000, unique=True, blank=True)  # Was default
     description = models.TextField()
     features = models.TextField(blank=True, help_text="List of features, one per line")
     technologies = models.TextField(blank=True, help_text="Technologies used, comma separated")
-    icon = models.CharField(max_length=50, blank=True, help_text="FontAwesome icon class")
+    icon = models.CharField(max_length=200, blank=True, help_text="FontAwesome icon class")  # Was 50
     image = models.ImageField(
         upload_to='services/',
         blank=True,
@@ -31,7 +31,7 @@ class Service(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name)[:1000]
         super().save(*args, **kwargs)
     
     def __str__(self):

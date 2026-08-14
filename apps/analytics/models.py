@@ -13,15 +13,15 @@ class AnalyticsEvent(models.Model):
         CONTACT_SUBMISSION = 'contact_submission', 'Contact Submission'
         SEARCH = 'search', 'Search'
     
-    event_type = models.CharField(max_length=30, choices=EventType.choices)
-    url = models.CharField(max_length=500)
-    referrer = models.URLField(blank=True, null=True)
+    event_type = models.CharField(max_length=100, choices=EventType.choices)  # Was 30
+    url = models.CharField(max_length=2000)  # Was 500
+    referrer = models.URLField(blank=True, null=True, max_length=2000)  # Added max_length
     ip_address = models.GenericIPAddressField(blank=True, null=True)
     user_agent = models.TextField(blank=True, null=True)
-    session_id = models.CharField(max_length=100, blank=True, null=True)
-    device_type = models.CharField(max_length=50, blank=True, null=True)
-    browser = models.CharField(max_length=50, blank=True, null=True)
-    os = models.CharField(max_length=50, blank=True, null=True)
+    session_id = models.CharField(max_length=500, blank=True, null=True)  # Was 100
+    device_type = models.CharField(max_length=100, blank=True, null=True)  # Was 50
+    browser = models.CharField(max_length=100, blank=True, null=True)  # Was 50
+    os = models.CharField(max_length=100, blank=True, null=True)  # Was 50
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
