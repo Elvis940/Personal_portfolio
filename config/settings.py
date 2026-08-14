@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,8 +37,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'ckeditor',
-    'cloudinary',
-    'cloudinary_storage',
+    'cloudinary',  # Add this
+    'cloudinary_storage',  # Add this
     
     # Local apps
     'apps.core',
@@ -49,8 +52,30 @@ INSTALLED_APPS = [
     'apps.analytics',
     'apps.ai_assistant',
     'apps.dashboard',
-    #'apps.cv',
 ]
+
+# ========================================
+# CLOUDINARY CONFIGURATION
+# ========================================
+
+# Cloudinary Configuration - Using your existing credentials
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dnbjcrqml',
+    'API_KEY': '682674164735159',
+    'API_SECRET': 'f8JG-PTwseB9pccYqrIjarDu_Lw',
+}
+
+# Use Cloudinary for all media file uploads
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Cloudinary upload options
+CLOUDINARY_UPLOAD_OPTIONS = {
+    'folder': 'elvis_portfolio',
+    'use_filename': True,
+    'unique_filename': True,
+    'overwrite': False,
+    'resource_type': 'auto',
+}
 
 # ========================================
 # MIDDLEWARE
@@ -58,14 +83,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add for static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'apps.analytics.middleware.AnalyticsMiddleware',  # Uncomment when ready
 ]
 
 # ========================================
@@ -141,18 +165,10 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media files are now handled by Cloudinary
+# But keep these for local development fallback
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# ========================================
-# CLOUDINARY (Image Storage)
-# ========================================
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
-    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
-    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
-}
 
 # ========================================
 # CRISPY FORMS
