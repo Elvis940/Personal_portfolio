@@ -1,0 +1,234 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ project.title }} - Elvis T. Harmon{% endblock %} {% block meta_description %}{{ project.meta_description|default:project.summary }}{% endblock %} {% block content %}
+<section class="project-detail-section">
+    <div class="container">
+        <!-- Back Button -->
+        <div class="mb-4">
+            <a href="{% url 'projects:project_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Projects
+            </a>
+        </div>
+
+        <!-- Project Header -->
+        <div class="mb-4">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for category in project.categories.all %}
+                <span class="badge bg-primary">{{ category.name }}</span> {% endfor %}
+            </div>
+            <h1 class="display-5 fw-bold mb-3">{{ project.title }}</h1>
+            <p class="lead text-secondary">{{ project.summary }}</p>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                {% for tech in project.technologies.all %}
+                <span class="tech-badge-small">{{ tech.name }}</span> {% endfor %}
+            </div>
+            <div class="d-flex gap-3">
+                <span class="text-muted">
+                    <i class="fas fa-calendar-alt me-1"></i>
+                    {% if project.start_date %}
+                        {{ project.start_date|date:"M Y" }}
+                        {% if project.end_date %}
+                            - {{ project.end_date|date:"M Y" }}
+                        {% endif %}
+                    {% endif %}
+                </span>
+                <span class="text-muted">
+                    <i class="fas fa-eye me-1"></i>{{ project.view_count }} views
+                </span>
+                <span class="text-muted">
+                    <i class="fas fa-tag me-1"></i>{{ project.get_status_display }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Featured Image -->
+        {% if project.featured_image %}
+        <div class="text-center mb-5">
+            <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 500px; width: 100%; object-fit: cover;">
+        </div>
+        {% endif %}
+
+        <!-- Project Content - Everything as paragraphs -->
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <!-- Project Description -->
+                {% if project.description %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">Project Overview</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.description|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Problem -->
+                {% if project.problem %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">The Problem</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.problem|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Solution -->
+                {% if project.solution %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">The Solution</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.solution|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Features -->
+                {% if project.features %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">Key Features</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.features|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Technologies Used -->
+                {% if project.technologies.all %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">Technologies Used</h3>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tech in project.technologies.all %}
+                        <span class="tech-badge">{{ tech.name }}</span> {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Challenges -->
+                {% if project.challenges %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">Challenges Faced</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.challenges|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Lessons Learned -->
+                {% if project.lessons_learned %}
+                <div class="mb-4">
+                    <h3 class="fw-bold">Lessons Learned</h3>
+                    <div class="text-secondary" style="line-height: 1.8;">
+                        {{ project.lessons_learned|safe }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Project Links -->
+                <div class="mt-4 pt-3 border-top">
+                    <h3 class="fw-bold mb-3">Project Links</h3>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" class="btn btn-dark">
+                            <i class="fab fa-github me-1"></i>View on GitHub
+                        </a>
+                        {% endif %} {% if project.live_demo_url %}
+                        <a href="{{ project.live_demo_url }}" target="_blank" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt me-1"></i>Live Demo
+                        </a>
+                        {% endif %} {% if not project.github_url and not project.live_demo_url %}
+                        <p class="text-muted mb-0">No external links available</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Projects -->
+        {% if related_projects %}
+        <div class="mt-5 pt-4 border-top">
+            <h3 class="fw-bold mb-4">Related Projects</h3>
+            <div class="row g-4">
+                {% for related in related_projects %}
+                <div class="col-md-4">
+                    <div class="card project-card h-100">
+                        {% if related.featured_image %}
+                        <img src="{{ related.featured_image.url }}" class="card-img-top" alt="{{ related.title }}" style="height: 180px; object-fit: cover;"> {% else %}
+                        <img src="https://via.placeholder.com/600x400/6C63FF/ffffff?text={{ related.title|urlencode }}" class="card-img-top" alt="{{ related.title }}" style="height: 180px; object-fit: cover;"> {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ related.title }}</h5>
+                            <p class="card-text">{{ related.summary|truncatechars:80 }}</p>
+                            <a href="{% url 'projects:project_detail' related.slug %}" class="btn btn-outline-primary btn-sm">View Project</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %} {% block extra_css %}
+<style>
+    .project-detail-section {
+        padding: 60px 0 120px 0;
+        min-height: 100vh;
+    }
+    
+    .tech-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .tech-badge-small {
+        display: inline-block;
+        padding: 2px 12px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .project-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+    
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    /* Dark mode adjustments */
+    
+    [data-theme="dark"] .bg-light {
+        background-color: var(--bg-secondary) !important;
+    }
+    
+    [data-theme="dark"] .tech-badge,
+    [data-theme="dark"] .tech-badge-small {
+        background: var(--bg-secondary);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+    /* Responsive */
+    
+    @media (max-width: 768px) {
+        .project-detail-section {
+            padding: 40px 0 80px 0;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .project-detail-section {
+            padding: 30px 0 60px 0;
+        }
+    }
+</style>
+{% endblock %}

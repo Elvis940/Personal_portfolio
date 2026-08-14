@@ -1,0 +1,177 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Projects - Elvis T. Harmon{% endblock %} {% block meta_description %}Explore Elvis T. Harmon's portfolio of software engineering projects including Django, Python, AI/ML, and web development
+work.{% endblock %} {% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">My Projects</h1>
+            <p class="lead text-secondary">Explore my portfolio of software engineering work</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search projects..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.slug }}" {% if current_category == category.slug %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="techFilter">
+                    <option value="">All Technologies</option>
+                    {% for tech in technologies %}
+                        <option value="{{ tech.name }}" {% if current_tech == tech.name %}selected{% endif %}>
+                            {{ tech.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100" id="applyFilters">
+                    <i class="fas fa-filter me-1"></i>Filter
+                </button>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="row g-4" id="projectsGrid">
+            {% for project in projects %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card project-card h-100">
+                    {% if project.featured_image %}
+                    <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}" style="height: 220px; object-fit: cover;"> {% else %}
+                    <img src="https://via.placeholder.com/600x400/6C63FF/ffffff?text={{ project.title|urlencode }}" class="card-img-top" alt="{{ project.title }}" style="height: 220px; object-fit: cover;"> {% endif %}
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-1 mb-2">
+                            {% for category in project.categories.all|slice:":2" %}
+                            <span class="badge bg-primary">{{ category.name }}</span> {% endfor %} {% if project.categories.count > 2 %}
+                            <span class="badge bg-secondary">+{{ project.categories.count|add:"-2" }}</span> {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">{{ project.summary|truncatechars:100 }}</p>
+                        <div class="d-flex flex-wrap gap-1 mb-3">
+                            {% for tech in project.technologies.all|slice:":3" %}
+                            <span class="tech-badge-small">{{ tech.name }}</span> {% endfor %} {% if project.technologies.count > 3 %}
+                            <span class="tech-badge-small">+{{ project.technologies.count|add:"-3" }}</span> {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pb-3">
+                        <a href="{% url 'projects:project_detail' project.slug %}" class="btn btn-outline-primary w-100">
+                            View Project <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-briefcase fa-3x text-muted d-block mb-3"></i>
+                <h3 class="text-muted">No projects found</h3>
+                <p class="text-muted">Check back later for new projects.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                {% if projects.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ projects.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_tech %}&tech={{ current_tech }}{% endif %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %} {% for num in projects.paginator.page_range %} {% if projects.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% elif num > projects.number|add:'-3' and num
+                < projects.number|add: '3' %} <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_tech %}&tech={{ current_tech }}{% endif %}">
+                                {{ num }}
+                            </a>
+                    </li>
+                    {% endif %} {% endfor %} {% if projects.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ projects.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}{% if current_tech %}&tech={{ current_tech }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %} {% block extra_css %}
+<style>
+    .project-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+    }
+    
+    .project-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .project-card .card-footer {
+        padding-top: 0;
+    }
+    
+    .tech-badge-small {
+        display: inline-block;
+        padding: 2px 10px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+    }
+</style>
+{% endblock %} {% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const techFilter = document.getElementById('techFilter');
+        const applyBtn = document.getElementById('applyFilters');
+
+        function applyFilters() {
+            const search = searchInput.value.trim();
+            const category = categoryFilter.value;
+            const tech = techFilter.value;
+
+            let url = window.location.pathname + '?';
+            if (search) url += 'q=' + encodeURIComponent(search) + '&';
+            if (category) url += 'category=' + encodeURIComponent(category) + '&';
+            if (tech) url += 'tech=' + encodeURIComponent(tech) + '&';
+
+            window.location.href = url;
+        }
+
+        applyBtn.addEventListener('click', applyFilters);
+
+        // Enter key on search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+    });
+</script>
+{% endblock %}

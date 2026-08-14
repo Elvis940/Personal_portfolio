@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Message Sent - Elvis T. Harmon{% endblock %} {% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <div class="mb-4">
+                            <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                        </div>
+                        <h2 class="fw-bold mb-3">Message Sent Successfully!</h2>
+                        <p class="text-secondary mb-4">
+                            Thank you for reaching out. I've received your message and will get back to you within 24 hours.
+                        </p>
+                        <div class="alert alert-info">
+                            <i class="fas fa-envelope me-2"></i> A confirmation email has been sent to your inbox.
+                        </div>
+                        <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+                            <a href="{% url 'core:home' %}" class="btn btn-primary">
+                                <i class="fas fa-home me-2"></i>Back to Home
+                            </a>
+                            <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-briefcase me-2"></i>View Projects
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'core:home' %}">
+            <!-- Logo Image -->
+            <img src="{% static 'images/logo.svg' %}" alt="Elvis T. Harmon" height="45" width="45" class="d-inline-block align-middle">
+            <span class="brand-text">click Home</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'core:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'about' in request.path %}active{% endif %}" href="{% url 'core:about' %}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'projects' in request.path %}active{% endif %}" href="{% url 'projects:project_list' %}">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'blog' in request.path %}active{% endif %}" href="{% url 'blog:blog_list' %}">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'services' in request.path %}active{% endif %}" href="{% url 'services:service_list' %}">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'services' in request.path %}active{% endif %}" href="{% url 'dashboard:login' %}">Admin login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary btn-sm ms-lg-2" href="{% url 'contact:contact' %}">
+                        <i class="fas fa-paper-plane me-1"></i>Contact
+                    </a>
+                </li>
+                <li class="nav-item ms-2">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Spacer to prevent content from hiding behind fixed navbar -->
+<div style="height: 76px;"></div>

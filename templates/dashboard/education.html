@@ -1,0 +1,142 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Education - Admin Panel{% endblock %} {% block page_title %}Education{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Add Education Form -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-plus me-2 text-primary"></i>Add Education</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Institution <span class="text-danger">*</span></label>
+                            <input type="text" name="institution" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Degree <span class="text-danger">*</span></label>
+                            <input type="text" name="degree" class="form-control" required placeholder="e.g., B.Sc. Computer Science">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Field of Study</label>
+                            <input type="text" name="field_of_study" class="form-control" placeholder="e.g., Computer Science">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                            <input type="date" name="start_date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_current" class="form-check-input">
+                                <label class="form-check-label">Currently Studying</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">GPA</label>
+                            <input type="number" name="gpa" class="form-control" step="0.01" min="0" max="4.0" placeholder="e.g., 3.8">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Achievements</label>
+                            <textarea name="achievements" class="form-control" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Add Education
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education List -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2 text-primary"></i>All Education</h6>
+                    <span class="badge bg-primary">{{ educations|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Institution</th>
+                                    <th>Degree</th>
+                                    <th>Date</th>
+                                    <th>Current</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for edu in educations %}
+                                <tr>
+                                    <td><strong>{{ edu.institution }}</strong></td>
+                                    <td>{{ edu.degree }}</td>
+                                    <td>
+                                        <small>
+                                            {{ edu.start_date|date:"M Y" }} - 
+                                            {% if edu.is_current %}Present{% else %}{{ edu.end_date|date:"M Y" }}{% endif %}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% if edu.is_current %}
+                                        <span class="badge bg-success">Current</span> {% else %}
+                                        <span class="badge bg-secondary">Completed</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'dashboard:education_edit' edu.id %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ edu.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ edu.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Education</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete <strong>{{ edu.institution }}</strong>?</p>
+                                                        <p class="text-muted small">This action cannot be undone.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{% url 'dashboard:education_delete' edu.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash me-1"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <i class="fas fa-graduation-cap fa-2x text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No education entries yet</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

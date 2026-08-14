@@ -1,0 +1,179 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Testimonials - Admin Panel{% endblock %} {% block page_title %}Testimonials{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Add Testimonial Form -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-plus me-2 text-primary"></i>Add Testimonial</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Client Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Position</label>
+                            <input type="text" name="position" class="form-control" placeholder="e.g., CEO, CTO, Director">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Company</label>
+                            <input type="text" name="company" class="form-control" placeholder="e.g., Company Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Testimonial Content <span class="text-danger">*</span></label>
+                            <textarea name="content" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Rating</label>
+                            <select name="rating" class="form-select">
+                                <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+                                <option value="4">4 Stars ⭐⭐⭐⭐</option>
+                                <option value="3">3 Stars ⭐⭐⭐</option>
+                                <option value="2">2 Stars ⭐⭐</option>
+                                <option value="1">1 Star ⭐</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Client Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                            <small class="text-muted">Optional - square image recommended (200x200px)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                            <small class="text-muted">Lower numbers appear first</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input">
+                                <label class="form-check-label">Featured Testimonial</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_active" class="form-check-input" checked>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Add Testimonial
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonials List -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2 text-primary"></i>All Testimonials</h6>
+                    <span class="badge bg-primary">{{ testimonials|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Rating</th>
+                                    <th>Featured</th>
+                                    <th>Status</th>
+                                    <th>Order</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for testimonial in testimonials %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ testimonial.name }}</strong> {% if testimonial.company %}
+                                        <br><small class="text-muted">{{ testimonial.company }}</small> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="text-warning">
+                                            <!-- Using a custom template filter would be better, but we'll use a simple approach -->
+                                            <span class="stars-display" data-rating="{{ testimonial.rating }}">
+                                                {% for i in "12345"|make_list %}
+                                                    <i class="fa{% if forloop.counter <= testimonial.rating %}s{% else %}r{% endif %} fa-star"></i>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if testimonial.is_featured %}
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Featured</span> {% else %}
+                                        <span class="badge bg-secondary">No</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if testimonial.is_active %}
+                                        <span class="badge bg-success">Active</span> {% else %}
+                                        <span class="badge bg-danger">Inactive</span> {% endif %}
+                                    </td>
+                                    <td>{{ testimonial.order }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'dashboard:testimonial_edit' testimonial.id %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ testimonial.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ testimonial.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Testimonial</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete the testimonial from <strong>{{ testimonial.name }}</strong>?</p>
+                                                        <p class="text-muted small">This action cannot be undone.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{% url 'dashboard:testimonial_delete' testimonial.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash me-1"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <i class="fas fa-star fa-2x text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No testimonials added yet</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

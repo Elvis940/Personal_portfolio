@@ -1,0 +1,137 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Certifications - Admin Panel{% endblock %} {% block page_title %}Certifications{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Add Certification Form -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-plus me-2 text-primary"></i>Add Certification</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Certification Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Organization <span class="text-danger">*</span></label>
+                            <input type="text" name="organization" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Issue Date <span class="text-danger">*</span></label>
+                            <input type="date" name="issue_date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Expiry Date</label>
+                            <input type="date" name="expiry_date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Credential ID</label>
+                            <input type="text" name="credential_id" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Credential URL</label>
+                            <input type="url" name="credential_url" class="form-control" placeholder="https://verify.example.com/...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Certificate Image</label>
+                            <input type="file" name="certificate_image" class="form-control" accept="image/*,.pdf">
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_verified" class="form-check-input">
+                                <label class="form-check-label">Verified</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Add Certification
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications List -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2 text-primary"></i>All Certifications</h6>
+                    <span class="badge bg-primary">{{ certifications|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Organization</th>
+                                    <th>Issue Date</th>
+                                    <th>Verified</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cert in certifications %}
+                                <tr>
+                                    <td><strong>{{ cert.name }}</strong></td>
+                                    <td>{{ cert.organization }}</td>
+                                    <td><small>{{ cert.issue_date|date:"M Y" }}</small></td>
+                                    <td>
+                                        {% if cert.is_verified %}
+                                        <span class="badge bg-success"><i class="fas fa-check"></i> Verified</span> {% else %}
+                                        <span class="badge bg-secondary">Pending</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'dashboard:certification_edit' cert.id %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ cert.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ cert.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Certification</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete <strong>{{ cert.name }}</strong>?</p>
+                                                        <p class="text-muted small">This action cannot be undone.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{% url 'dashboard:certification_delete' cert.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash me-1"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <i class="fas fa-certificate fa-2x text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No certifications added yet</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

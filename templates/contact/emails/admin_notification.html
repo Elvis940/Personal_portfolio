@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6C63FF, #3F3D9E);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .field {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid #6C63FF;
+        }
+        
+        .field-label {
+            font-weight: bold;
+            color: #6C63FF;
+            font-size: 0.9rem;
+        }
+        
+        .field-value {
+            margin-top: 5px;
+            color: #333;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h2>📩 New Contact Message</h2>
+        <p style="margin: 0; opacity: 0.9;">A new message has been received from {{ message.full_name }}</p>
+    </div>
+
+    <div class="content">
+        <div class="field">
+            <div class="field-label">From</div>
+            <div class="field-value">{{ message.full_name }}</div>
+        </div>
+
+        <div class="field">
+            <div class="field-label">Email</div>
+            <div class="field-value"><a href="mailto:{{ message.email }}">{{ message.email }}</a></div>
+        </div>
+
+        {% if message.phone %}
+        <div class="field">
+            <div class="field-label">Phone</div>
+            <div class="field-value">{{ message.phone }}</div>
+        </div>
+        {% endif %}
+
+        <div class="field">
+            <div class="field-label">Subject</div>
+            <div class="field-value">{{ message.subject }}</div>
+        </div>
+
+        <div class="field">
+            <div class="field-label">Project Type</div>
+            <div class="field-value">{{ message.get_project_type_display }}</div>
+        </div>
+
+        <div class="field">
+            <div class="field-label">Budget Range</div>
+            <div class="field-value">{{ message.get_budget_display }}</div>
+        </div>
+
+        <div class="field">
+            <div class="field-label">Timeline</div>
+            <div class="field-value">{{ message.get_timeline_display }}</div>
+        </div>
+
+        <div class="field">
+            <div class="field-label">Message</div>
+            <div class="field-value" style="white-space: pre-wrap;">{{ message.message }}</div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{{ site_url }}/dashboard/messages/{{ message.id }}/" style="display: inline-block; padding: 10px 20px; background: #6C63FF; color: white; text-decoration: none; border-radius: 4px;">
+                View in Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>This message was sent from the contact form on your portfolio website.</p>
+        <p>Received: {{ message.created_at|date:"F j, Y, g:i A" }}</p>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Edit Experience - Admin Panel{% endblock %} {% block page_title %}Edit Experience{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Organization <span class="text-danger">*</span></label>
+                            <input type="text" name="organization" class="form-control" value="{{ experience.organization }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Position <span class="text-danger">*</span></label>
+                            <input type="text" name="position" class="form-control" value="{{ experience.position }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" name="location" class="form-control" value="{{ experience.location|default:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" name="is_current" class="form-check-input" {% if experience.is_current %}checked{% endif %}>
+                                <label class="form-check-label">Current Position</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                            <input type="date" name="start_date" class="form-control" value="{{ experience.start_date|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control" value="{{ experience.end_date|date:'Y-m-d'|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="3">{{ experience.description|default:'' }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Responsibilities</label>
+                            <textarea name="responsibilities" class="form-control" rows="3">{{ experience.responsibilities|default:'' }}</textarea>
+                            <small class="text-muted">List responsibilities, one per line</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Update Experience
+                    </button>
+                    <a href="{% url 'dashboard:experience' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Testimonials - Elvis T. Harmon{% endblock %} {% block meta_description %}Read what clients say about working with Elvis T. Harmon. Testimonials from satisfied clients on software development,
+Django, AI/ML, and web development projects.{% endblock %} {% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">What People Say</h1>
+            <p class="lead text-secondary">Testimonials from clients and colleagues I've worked with.</p>
+        </div>
+
+        <!-- Featured Testimonials -->
+        {% if featured_testimonials %}
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <h3 class="fw-bold text-center mb-4">Featured Testimonials</h3>
+            </div>
+            {% for testimonial in featured_testimonials %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card testimonial-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            {% if testimonial.image %}
+                            <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle mb-3" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #6C63FF;"> {% else %}
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; border: 3px solid #6C63FF;">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <div class="text-warning">
+                                {% for i in "12345"|make_list %}
+                                <i class="fa{% if forloop.counter <= testimonial.rating %}s{% else %}r{% endif %} fa-star"></i> {% endfor %}
+                            </div>
+                        </div>
+
+                        <p class="card-text text-secondary" style="line-height: 1.8;">
+                            "{{ testimonial.content }}"
+                        </p>
+
+                        <div class="text-center mt-3">
+                            <h6 class="fw-bold mb-0">{{ testimonial.name }}</h6>
+                            {% if testimonial.position %}
+                            <small class="text-muted">{{ testimonial.position }}</small> {% endif %} {% if testimonial.company %}
+                            <br><small class="text-muted">{{ testimonial.company }}</small> {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- All Testimonials -->
+        <div class="row g-4">
+            <div class="col-12">
+                <h3 class="fw-bold text-center mb-4">All Testimonials</h3>
+            </div>
+            {% for testimonial in testimonials %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card testimonial-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            {% if testimonial.image %}
+                            <img src="{{ testimonial.image.url }}" alt="{{ testimonial.name }}" class="rounded-circle mb-3" style="width: 70px; height: 70px; object-fit: cover; border: 3px solid #6C63FF;"> {% else %}
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px; border: 3px solid #6C63FF;">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <div class="text-warning">
+                                {% for i in "12345"|make_list %}
+                                <i class="fa{% if forloop.counter <= testimonial.rating %}s{% else %}r{% endif %} fa-star"></i> {% endfor %}
+                            </div>
+                        </div>
+
+                        <p class="card-text text-secondary" style="line-height: 1.8;">
+                            "{{ testimonial.content|truncatechars:150 }}"
+                        </p>
+
+                        <div class="text-center mt-3">
+                            <h6 class="fw-bold mb-0">{{ testimonial.name }}</h6>
+                            {% if testimonial.position %}
+                            <small class="text-muted">{{ testimonial.position }}</small> {% endif %} {% if testimonial.company %}
+                            <br><small class="text-muted">{{ testimonial.company }}</small> {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-star fa-3x text-muted d-block mb-3"></i>
+                <h3 class="text-muted">No testimonials yet</h3>
+                <p class="text-muted">Testimonials will appear here when clients share their experience.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} {% block extra_css %}
+<style>
+    .testimonial-card {
+        transition: all 0.3s ease;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--card-bg);
+        height: 100%;
+    }
+    
+    .testimonial-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .testimonial-card .card-body {
+        background: var(--card-bg);
+    }
+    
+    .testimonial-card .text-warning {
+        color: #f1c40f !important;
+    }
+    
+    [data-theme="dark"] .testimonial-card .card-body {
+        background: var(--card-bg);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Edit Skill - Admin Panel{% endblock %} {% block page_title %}Edit Skill{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Skill Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ skill.name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <input type="text" name="category" class="form-control" value="{{ skill.category|default:'' }}" placeholder="e.g., Backend, Frontend, Database">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Proficiency</label>
+                            <select name="proficiency" class="form-select">
+                                {% for value, label in proficiency_choices %}
+                                    <option value="{{ value }}" {% if skill.proficiency == value %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Years Experience</label>
+                            <input type="number" name="years_experience" class="form-control" value="{{ skill.years_experience }}" min="0">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Icon (FontAwesome)</label>
+                            <input type="text" name="icon" class="form-control" value="{{ skill.icon|default:'' }}" placeholder="fab fa-python">
+                            <small class="text-muted">e.g., fab fa-python, fas fa-database</small>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="{{ skill.order|default:0 }}">
+                            <small class="text-muted">Lower numbers appear first</small>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input" {% if skill.is_featured %}checked{% endif %}>
+                                <label class="form-check-label">Featured Skill</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Update Skill
+                    </button>
+                    <a href="{% url 'dashboard:skills' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

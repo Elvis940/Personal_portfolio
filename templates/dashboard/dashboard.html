@@ -1,0 +1,269 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Dashboard - Admin Panel{% endblock %} {% block page_title %}Dashboard{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="dashboard-card">
+                <div class="card-body">
+                    <h4 class="mb-1">Welcome back, Elvis! 👋</h4>
+                    <p class="text-muted mb-0">Here's an overview of your portfolio performance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-primary"><i class="fas fa-envelope"></i></div>
+                <h5 class="stat-number">{{ total_messages|default:"0" }}</h5>
+                <p class="stat-label">Total Messages</p>
+                <div class="stat-trend text-success">
+                    <i class="fas fa-arrow-up"></i> {{ weekly_messages|default:"0" }} new this week
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-danger"><i class="fas fa-clock"></i></div>
+                <h5 class="stat-number">{{ new_messages|default:"0" }}</h5>
+                <p class="stat-label">New Messages</p>
+                <div class="stat-trend text-danger">
+                    <i class="fas fa-clock me-1"></i> Needs attention
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-info"><i class="fas fa-comments"></i></div>
+                <h5 class="stat-number">{{ in_discussion|default:"0" }}</h5>
+                <p class="stat-label">In Discussion</p>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-success"><i class="fas fa-check-circle"></i></div>
+                <h5 class="stat-number">{{ completed_messages|default:"0" }}</h5>
+                <p class="stat-label">Completed</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Stats Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-purple"><i class="fas fa-briefcase"></i></div>
+                <h5 class="stat-number">{{ total_projects|default:"0" }}</h5>
+                <p class="stat-label">Total Projects</p>
+                <div class="stat-trend text-info">
+                    <i class="fas fa-star me-1"></i> {{ featured_projects|default:"0" }} featured
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-pink"><i class="fas fa-blog"></i></div>
+                <h5 class="stat-number">{{ total_blog_posts|default:"0" }}</h5>
+                <p class="stat-label">Blog Posts</p>
+                <div class="stat-trend text-warning">
+                    <i class="fas fa-eye me-1"></i> {{ published_posts|default:"0" }} published
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-orange"><i class="fas fa-users"></i></div>
+                <h5 class="stat-number">{{ total_testimonials|default:"0" }}</h5>
+                <p class="stat-label">Testimonials</p>
+                <div class="stat-trend text-success">
+                    <i class="fas fa-star me-1"></i> {{ featured_testimonials|default:"0" }} featured
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-teal"><i class="fas fa-concierge-bell"></i></div>
+                <h5 class="stat-number">{{ total_services|default:"0" }}</h5>
+                <p class="stat-label">Services</p>
+                <div class="stat-trend text-info">
+                    <i class="fas fa-check me-1"></i> {{ active_services|default:"0" }} active
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile & Skills Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-indigo"><i class="fas fa-code"></i></div>
+                <h5 class="stat-number">{{ total_skills|default:"0" }}</h5>
+                <p class="stat-label">Skills</p>
+                <div class="stat-trend text-info">
+                    <i class="fas fa-star me-1"></i> {{ featured_skills|default:"0" }} featured
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-cyan"><i class="fas fa-briefcase"></i></div>
+                <h5 class="stat-number">{{ total_experience|default:"0" }}</h5>
+                <p class="stat-label">Experience</p>
+                <div class="stat-trend text-success">
+                    <i class="fas fa-clock me-1"></i> {{ current_experience|default:"0" }} current
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-rose"><i class="fas fa-graduation-cap"></i></div>
+                <h5 class="stat-number">{{ total_education|default:"0" }}</h5>
+                <p class="stat-label">Education</p>
+                <div class="stat-trend text-info">
+                    <i class="fas fa-check me-1"></i> {{ completed_education|default:"0" }} completed
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card">
+                <div class="stat-icon bg-yellow"><i class="fas fa-certificate"></i></div>
+                <h5 class="stat-number">{{ total_certifications|default:"0" }}</h5>
+                <p class="stat-label">Certifications</p>
+                <div class="stat-trend text-success">
+                    <i class="fas fa-check-circle me-1"></i> {{ verified_certifications|default:"0" }} verified
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-bolt me-2 text-primary"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3 col-6">
+                            <a href="{% url 'dashboard:project_create' %}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-plus-circle me-1"></i> Add Project
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <a href="{% url 'dashboard:blog_post_create' %}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-plus-circle me-1"></i> Add Blog Post
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <a href="{% url 'dashboard:testimonials' %}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-plus-circle me-1"></i> Add Testimonial
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <a href="{% url 'dashboard:skills' %}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-plus-circle me-1"></i> Add Skill
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Messages -->
+    <div class="dashboard-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="fas fa-clock me-2 text-primary"></i>Recent Messages</h6>
+            <a href="{% url 'dashboard:messages' %}" class="btn btn-sm btn-primary">
+                View All <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in recent_messages %}
+                        <tr>
+                            <td><strong>{{ msg.full_name }}</strong></td>
+                            <td>{{ msg.email }}</td>
+                            <td>{{ msg.subject|truncatechars:30 }}</td>
+                            <td>
+                                <span class="status-badge status-{{ msg.status|lower }}">
+                                    {{ msg.get_status_display }}
+                                </span>
+                            </td>
+                            <td><small class="text-muted">{{ msg.created_at|date:"M d, Y" }}</small></td>
+                            <td>
+                                <a href="{% url 'dashboard:message_detail' msg.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="fas fa-inbox fa-2x text-muted d-block mb-2"></i>
+                                <p class="text-muted mb-0">No messages received yet</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block extra_css %}
+<style>
+    .stat-icon.bg-purple {
+        background: #6C63FF;
+    }
+    
+    .stat-icon.bg-pink {
+        background: #e83e8c;
+    }
+    
+    .stat-icon.bg-orange {
+        background: #fd7e14;
+    }
+    
+    .stat-icon.bg-teal {
+        background: #20c997;
+    }
+    
+    .stat-icon.bg-indigo {
+        background: #6610f2;
+    }
+    
+    .stat-icon.bg-cyan {
+        background: #17a2b8;
+    }
+    
+    .stat-icon.bg-rose {
+        background: #dc3545;
+    }
+    
+    .stat-icon.bg-yellow {
+        background: #ffc107;
+        color: #000;
+    }
+    
+    .stat-card .stat-trend {
+        font-size: 0.75rem;
+        margin-top: 6px;
+    }
+</style>
+{% endblock %}

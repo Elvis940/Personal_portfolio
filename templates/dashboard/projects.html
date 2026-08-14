@@ -1,0 +1,105 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Projects - Admin Panel{% endblock %} {% block page_title %}Projects{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0"><i class="fas fa-briefcase me-2 text-primary"></i>Projects</h4>
+            <p class="text-muted mb-0">Manage your portfolio projects</p>
+        </div>
+        <a href="{% url 'dashboard:project_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Add New Project
+        </a>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Featured</th>
+                            <th>Published</th>
+                            <th>Views</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ project.title }}</strong></td>
+                            <td>
+                                <span class="badge {% if project.status == 'COMPLETED' %}bg-success{% elif project.status == 'IN_PROGRESS' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                    {{ project.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if project.is_featured %}
+                                <i class="fas fa-star text-warning"></i> {% else %}
+                                <i class="fas fa-star text-muted"></i> {% endif %}
+                            </td>
+                            <td>
+                                {% if project.is_published %}
+                                <span class="badge bg-success">Published</span> {% else %}
+                                <span class="badge bg-secondary">Draft</span> {% endif %}
+                            </td>
+                            <td>{{ project.view_count }}</td>
+                            <td><small class="text-muted">{{ project.created_at|date:"M d, Y" }}</small></td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'dashboard:project_edit' project.id %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ project.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Delete Project</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure you want to delete <strong>{{ project.title }}</strong>?</p>
+                                                <p class="text-muted small">This action cannot be undone.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form method="post" action="{% url 'dashboard:project_delete' project.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="fas fa-trash me-1"></i>Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <i class="fas fa-briefcase fa-3x text-muted d-block mb-3"></i>
+                                <h5 class="text-muted">No projects yet</h5>
+                                <p class="text-muted">Create your first project to showcase your work.</p>
+                                <a href="{% url 'dashboard:project_create' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-1"></i>Add Project
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

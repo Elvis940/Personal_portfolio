@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #6C63FF, #3F3D9E);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .status-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .status-old {
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .status-new {
+            color: #6C63FF;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .arrow {
+            margin: 0 15px;
+            color: #666;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h2>📋 Status Update on Your Inquiry</h2>
+    </div>
+
+    <div class="content">
+        <p>Dear {{ message.full_name }},</p>
+
+        <p>I wanted to let you know that the status of your inquiry has been updated.</p>
+
+        <div class="status-box">
+            <p style="margin: 0;">
+                <span class="status-old">{{ old_status }}</span>
+                <span class="arrow">→</span>
+                <span class="status-new">{{ new_status }}</span>
+            </p>
+        </div>
+
+        <p style="margin-top: 20px;">
+            If you have any questions or need to provide additional information, feel free to reply to this email.
+        </p>
+
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+            <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                Best regards,<br>
+                <strong>Elvis T. Harmon</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p style="margin: 0; font-size: 0.85rem; color: #999;">
+            This is an automated notification from your inquiry management system.
+        </p>
+    </div>
+</body>
+
+</html>

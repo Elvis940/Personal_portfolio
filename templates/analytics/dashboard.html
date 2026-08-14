@@ -1,0 +1,126 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Analytics Dashboard{% endblock %} {% block page_title %}Analytics Dashboard{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0"><i class="fas fa-chart-line me-2 text-primary"></i>Analytics Dashboard</h4>
+            <p class="text-muted mb-0">Overview of your website performance</p>
+        </div>
+        <button class="btn btn-sm btn-outline-secondary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-1"></i>Refresh
+        </button>
+    </div>
+
+    <!-- Period Filters -->
+    <div class="mb-4">
+        <a href="?period=today" class="btn btn-sm {% if period == 'today' %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">Today</a>
+        <a href="?period=week" class="btn btn-sm {% if period == 'week' %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">Week</a>
+        <a href="?period=month" class="btn btn-sm {% if period == 'month' %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">Month</a>
+        <a href="?period=year" class="btn btn-sm {% if period == 'year' %}btn-primary{% else %}btn-outline-secondary{% endif %} me-1">Year</a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="display-6 fw-bold text-primary">{{ total_views }}</h2>
+                    <p class="text-muted mb-0">Total Views</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="display-6 fw-bold text-success">{{ unique_visitors }}</h2>
+                    <p class="text-muted mb-0">Unique Visitors</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="display-6 fw-bold text-info">{{ page_views }}</h2>
+                    <p class="text-muted mb-0">Page Views</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="display-6 fw-bold text-warning">{{ project_views }}</h2>
+                    <p class="text-muted mb-0">Project Views</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Data Message -->
+    {% if not has_data %}
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i> No analytics data available yet. Data will appear as visitors interact with your site.
+        <br>Try visiting some pages on your site to generate data.
+    </div>
+    {% endif %}
+
+    <!-- Event Breakdown -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Event Breakdown</h6>
+                </div>
+                <div class="card-body">
+                    {% for event in event_breakdown %}
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <span>{{ event.event_type|title|cut:"_" }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ event.count }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No events recorded yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-file-alt me-2 text-primary"></i>Top Pages</h6>
+                </div>
+                <div class="card-body">
+                    {% for page in top_pages %}
+                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                        <span class="text-truncate" style="max-width: 70%;">{{ page.url|truncatechars:40 }}</span>
+                        <span class="badge bg-secondary rounded-pill">{{ page.count }}</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-3">No pages visited yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card border-0 shadow-sm mt-4">
+        <div class="card-header bg-white">
+            <h6 class="mb-0 fw-bold"><i class="fas fa-clock me-2 text-primary"></i>Recent Activity</h6>
+        </div>
+        <div class="card-body">
+            {% for event in recent_activity %}
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                <div>
+                    <span class="badge bg-primary me-2">{{ event.get_event_type_display }}</span>
+                    <span class="text-muted">{{ event.url|truncatechars:50 }}</span>
+                </div>
+                <small class="text-muted">{{ event.created_at|timesince }} ago</small>
+            </div>
+            {% empty %}
+            <p class="text-muted text-center py-3">No recent activity</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

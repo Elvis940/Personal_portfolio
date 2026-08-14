@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Services - Elvis T. Harmon{% endblock %} {% block meta_description %}Explore the professional services offered by Elvis T. Harmon including web development, Django development, AI/ML solutions,
+API development, and technical consulting.{% endblock %} {% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold">My Services</h1>
+            <p class="lead text-secondary">Professional services to help bring your ideas to life.</p>
+        </div>
+
+        <!-- Featured Services -->
+        {% if featured_services %}
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <h3 class="fw-bold text-center mb-4">Featured Services</h3>
+            </div>
+            {% for service in featured_services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        {% if service.icon %}
+                        <i class="{{ service.icon }} fa-3x text-primary mb-3"></i> {% else %}
+                        <i class="fas fa-cube fa-3x text-primary mb-3"></i> {% endif %}
+                        <h4 class="card-title fw-bold">{{ service.name }}</h4>
+                        <p class="card-text text-secondary">{{ service.description|truncatechars:120 }}</p>
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
+                            {% for tech in service.get_technologies_list|slice:":3" %}
+                            <span class="tech-badge-small">{{ tech }}</span> {% endfor %}
+                        </div>
+                        <a href="{% url 'services:service_detail' service.slug %}" class="btn btn-outline-primary">
+                            Learn More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- All Services -->
+        <div class="row g-4">
+            <div class="col-12">
+                <h3 class="fw-bold text-center mb-4">All Services</h3>
+            </div>
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        {% if service.icon %}
+                        <i class="{{ service.icon }} fa-2x text-primary mb-3"></i> {% else %}
+                        <i class="fas fa-cube fa-2x text-primary mb-3"></i> {% endif %}
+                        <h5 class="card-title fw-bold">{{ service.name }}</h5>
+                        <p class="card-text text-secondary">{{ service.description|truncatechars:100 }}</p>
+                        <a href="{% url 'services:service_detail' service.slug %}" class="btn btn-outline-primary btn-sm">
+                            Learn More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-concierge-bell fa-3x text-muted d-block mb-3"></i>
+                <h3 class="text-muted">No services available</h3>
+                <p class="text-muted">Check back later for new services.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} {% block extra_css %}
+<style>
+    .service-card {
+        transition: all 0.3s ease;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .service-card .card-body {
+        background: var(--card-bg);
+    }
+    
+    .tech-badge-small {
+        display: inline-block;
+        padding: 2px 10px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,266 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Site Settings - Admin Panel{% endblock %} {% block page_title %}Site Settings{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ======================================== -->
+                <!-- General Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3">
+                    <i class="fas fa-home me-2 text-primary"></i>General Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Site Name</label>
+                        <input type="text" name="site_name" class="form-control" value="{{ settings.site_name|default:'Elvis T. Harmon' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Site Tagline</label>
+                        <input type="text" name="site_tagline" class="form-control" value="{{ settings.site_tagline|default:'Building Intelligent Software That Solves Real Problems' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Site Description</label>
+                        <textarea name="site_description" class="form-control" rows="2">{{ settings.site_description|default:'' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- Email Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-envelope me-2 text-primary"></i>Email Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Admin Email</label>
+                        <input type="email" name="admin_email" class="form-control" value="{{ settings.admin_email|default:'harmonelvis78@gmail.com' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Default From Email</label>
+                        <input type="email" name="default_from_email" class="form-control" value="{{ settings.default_from_email|default:'noreply@elvisportfolio.com' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email Subject Prefix</label>
+                        <input type="text" name="email_subject_prefix" class="form-control" value="{{ settings.email_subject_prefix|default:'[Contact Form] ' }}">
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- Social Media Links -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-share-alt me-2 text-primary"></i>Social Media Links
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">GitHub</label>
+                        <input type="url" name="github_url" class="form-control" value="{{ settings.github_url|default:'' }}" placeholder="https://github.com/username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="url" name="linkedin_url" class="form-control" value="{{ settings.linkedin_url|default:'' }}" placeholder="https://linkedin.com/in/username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Twitter</label>
+                        <input type="url" name="twitter_url" class="form-control" value="{{ settings.twitter_url|default:'' }}" placeholder="https://twitter.com/username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">YouTube</label>
+                        <input type="url" name="youtube_url" class="form-control" value="{{ settings.youtube_url|default:'' }}" placeholder="https://youtube.com/c/username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Facebook</label>
+                        <input type="url" name="facebook_url" class="form-control" value="{{ settings.facebook_url|default:'' }}" placeholder="https://facebook.com/username">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Instagram</label>
+                        <input type="url" name="instagram_url" class="form-control" value="{{ settings.instagram_url|default:'' }}" placeholder="https://instagram.com/username">
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- Appearance Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-palette me-2 text-primary"></i>Appearance Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Primary Color</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" name="primary_color" class="form-control form-control-color" value="{{ settings.primary_color|default:'#6C63FF' }}" style="width: 60px; height: 38px; padding: 2px;">
+                            <input type="text" name="primary_color_text" class="form-control" value="{{ settings.primary_color|default:'#6C63FF' }}" style="flex: 1;">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Secondary Color</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" name="secondary_color" class="form-control form-control-color" value="{{ settings.secondary_color|default:'#3F3D9E' }}" style="width: 60px; height: 38px; padding: 2px;">
+                            <input type="text" name="secondary_color_text" class="form-control" value="{{ settings.secondary_color|default:'#3F3D9E' }}" style="flex: 1;">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Accent Color</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="color" name="accent_color" class="form-control form-control-color" value="{{ settings.accent_color|default:'#FF6B6B' }}" style="width: 60px; height: 38px; padding: 2px;">
+                            <input type="text" name="accent_color_text" class="form-control" value="{{ settings.accent_color|default:'#FF6B6B' }}" style="flex: 1;">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Default Theme</label>
+                        <select name="default_theme" class="form-select">
+                            <option value="light" {% if settings.default_theme == 'light' %}selected{% endif %}>☀️ Light</option>
+                            <option value="dark" {% if settings.default_theme == 'dark' %}selected{% endif %}>🌙 Dark</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Font Family</label>
+                        <input type="text" name="font_family" class="form-control" value="{{ settings.font_family|default:'Inter' }}" placeholder="Inter, Roboto, Open Sans">
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- SEO Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-search me-2 text-primary"></i>SEO & Meta Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Meta Title</label>
+                        <input type="text" name="meta_title" class="form-control" value="{{ settings.meta_title|default:'Elvis T. Harmon - Software Engineer' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Meta Description</label>
+                        <textarea name="meta_description" class="form-control" rows="2">{{ settings.meta_description|default:'' }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Meta Keywords</label>
+                        <input type="text" name="meta_keywords" class="form-control" value="{{ settings.meta_keywords|default:'' }}" placeholder="Software Engineer, Django, Python, AI/ML">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Google Analytics ID</label>
+                        <input type="text" name="google_analytics_id" class="form-control" value="{{ settings.google_analytics_id|default:'' }}" placeholder="UA-XXXXXXXXX-X">
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- Footer Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-copyright me-2 text-primary"></i>Footer Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Footer Copyright</label>
+                        <input type="text" name="footer_copyright" class="form-control" value="{{ settings.footer_copyright|default:'© 2024 Elvis T. Harmon. All rights reserved.' }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Footer About Text</label>
+                        <textarea name="footer_about" class="form-control" rows="2">{{ settings.footer_about|default:'' }}</textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Footer Email</label>
+                        <input type="email" name="footer_email" class="form-control" value="{{ settings.footer_email|default:'harmonelvis78@gmail.com' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Footer Phone</label>
+                        <input type="text" name="footer_phone" class="form-control" value="{{ settings.footer_phone|default:'+1 (555) 123-4567' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Footer Location</label>
+                        <input type="text" name="footer_location" class="form-control" value="{{ settings.footer_location|default:'San Francisco, CA' }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Footer Quick Links</label>
+                        <input type="text" name="footer_quick_links" class="form-control" value="{{ settings.footer_quick_links|default:'Home, About, Projects, Blog' }}" placeholder="Home, About, Projects, Blog">
+                        <small class="text-muted">Comma separated</small>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Footer Services</label>
+                        <input type="text" name="footer_services" class="form-control" value="{{ settings.footer_services|default:'Web Development, Django, AI/ML, API Development' }}" placeholder="Web Development, Django, AI/ML">
+                        <small class="text-muted">Comma separated</small>
+                    </div>
+                </div>
+
+                <!-- ======================================== -->
+                <!-- Advanced Settings -->
+                <!-- ======================================== -->
+                <h5 class="fw-bold border-bottom pb-2 mb-3 mt-4">
+                    <i class="fas fa-cog me-2 text-primary"></i>Advanced Settings
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Site URL</label>
+                        <input type="url" name="site_url" class="form-control" value="{{ settings.site_url|default:'' }}" placeholder="https://yourdomain.com">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check mt-4">
+                            <input type="checkbox" name="maintenance_mode" class="form-check-input" {% if settings.maintenance_mode %}checked{% endif %}>
+                            <label class="form-check-label fw-semibold">Maintenance Mode</label>
+                            <br><small class="text-muted">When enabled, visitors will see a maintenance page</small>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Maintenance Message</label>
+                        <textarea name="maintenance_message" class="form-control" rows="2">{{ settings.maintenance_message|default:'We are currently undergoing maintenance. Please check back soon.' }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Analytics Code</label>
+                        <textarea name="analytics_code" class="form-control" rows="3">{{ settings.analytics_code|default:'' }}</textarea>
+                        <small class="text-muted">Paste your Google Analytics, Facebook Pixel, or other tracking codes here.</small>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Custom CSS</label>
+                        <textarea name="custom_css" class="form-control" rows="3">{{ settings.custom_css|default:'' }}</textarea>
+                        <small class="text-muted">Override default styles with custom CSS.</small>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Custom JavaScript</label>
+                        <textarea name="custom_js" class="form-control" rows="3">{{ settings.custom_js|default:'' }}</textarea>
+                        <small class="text-muted">Add custom JavaScript to your site.</small>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Robots.txt</label>
+                        <textarea name="robots_txt" class="form-control" rows="4">{{ settings.robots_txt|default:'User-agent: *\nAllow: /' }}</textarea>
+                        <small class="text-muted">Control search engine crawling.</small>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Save All Settings
+                    </button>
+                    <a href="{% url 'dashboard:dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sync color picker with text input
+        document.querySelectorAll('input[type="color"]').forEach(function(colorPicker) {
+            const textInput = colorPicker.closest('.d-flex').querySelector('input[type="text"]');
+            if (textInput) {
+                colorPicker.addEventListener('input', function() {
+                    textInput.value = this.value;
+                });
+                textInput.addEventListener('input', function() {
+                    colorPicker.value = this.value;
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

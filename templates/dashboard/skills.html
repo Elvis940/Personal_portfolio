@@ -1,0 +1,149 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Skills - Admin Panel{% endblock %} {% block page_title %}Skills{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Add Skill Form -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-plus me-2 text-primary"></i>Add New Skill</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Skill Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <input type="text" name="category" class="form-control" placeholder="e.g., Backend, Frontend, Database">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Proficiency</label>
+                            <select name="proficiency" class="form-select">
+                                {% for value, label in proficiency_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Years Experience</label>
+                            <input type="number" name="years_experience" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Icon (FontAwesome)</label>
+                            <input type="text" name="icon" class="form-control" placeholder="fab fa-python">
+                            <small class="text-muted">e.g., fab fa-python, fas fa-database</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                            <small class="text-muted">Lower numbers appear first</small>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input">
+                                <label class="form-check-label">Featured Skill</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Add Skill
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills List -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2 text-primary"></i>All Skills</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Proficiency</th>
+                                    <th>Years</th>
+                                    <th>Icon</th>
+                                    <th>Featured</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for skill in skills %}
+                                <tr>
+                                    <td><strong>{{ skill.name }}</strong></td>
+                                    <td>{{ skill.category|default:"-" }}</td>
+                                    <td>
+                                        <span class="badge {% if skill.proficiency == 'EXPERT' %}bg-success{% elif skill.proficiency == 'ADVANCED' %}bg-primary{% elif skill.proficiency == 'INTERMEDIATE' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                            {{ skill.get_proficiency_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ skill.years_experience }}+</td>
+                                    <td>
+                                        {% if skill.icon %}
+                                        <i class="{{ skill.icon }}"></i> {% else %} - {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if skill.is_featured %}
+                                        <i class="fas fa-star text-warning"></i> {% else %}
+                                        <i class="fas fa-star text-muted"></i> {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'dashboard:skill_edit' skill.id %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ skill.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ skill.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Skill</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete <strong>{{ skill.name }}</strong>?</p>
+                                                        <p class="text-muted small">This action cannot be undone.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{% url 'dashboard:skill_delete' skill.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash me-1"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <i class="fas fa-code fa-2x text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No skills added yet</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

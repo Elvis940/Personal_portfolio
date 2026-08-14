@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% load static %} {% block title %}{{ service.name }} - Elvis T. Harmon{% endblock %} {% block meta_description %}{{ service.description|truncatechars:160 }}{% endblock %} {% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Back Button -->
+                <div class="mb-4">
+                    <a href="{% url 'services:service_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Services
+                    </a>
+                </div>
+
+                <!-- Service Header -->
+                <div class="text-center mb-4">
+                    {% if service.icon %}
+                    <i class="{{ service.icon }} fa-4x text-primary mb-3"></i> {% endif %}
+                    <h1 class="display-4 fw-bold">{{ service.name }}</h1>
+                </div>
+
+                <!-- Service Image -->
+                {% if service.image %}
+                <div class="text-center mb-4">
+                    <img src="{{ service.image.url }}" alt="{{ service.name }}" class="img-fluid rounded-3 shadow-sm" style="max-height: 400px; width: 100%; object-fit: cover;">
+                </div>
+                {% endif %}
+
+                <!-- Service Content -->
+                <div class="service-content">
+                    <h3 class="fw-bold mb-3">Overview</h3>
+                    <p class="text-secondary" style="line-height: 1.8;">{{ service.description }}</p>
+                </div>
+
+                <!-- Features -->
+                {% if service.get_features_list %}
+                <div class="mt-4">
+                    <h3 class="fw-bold mb-3">Key Features</h3>
+                    <ul class="list-unstyled">
+                        {% for feature in service.get_features_list %}
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-primary me-2"></i> {{ feature }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Technologies -->
+                {% if service.get_technologies_list %}
+                <div class="mt-4">
+                    <h3 class="fw-bold mb-3">Technologies Used</h3>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tech in service.get_technologies_list %}
+                        <span class="tech-badge">{{ tech }}</span> {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- CTA -->
+                <div class="mt-5 pt-4 border-top text-center">
+                    <h4 class="fw-bold mb-3">Ready to get started?</h4>
+                    <p class="text-secondary mb-4">Let's discuss how I can help you with your project.</p>
+                    <a href="{% url 'contact:contact' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane me-2"></i>Contact Me
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} {% block extra_css %}
+<style>
+    .service-content {
+        font-size: 1.05rem;
+        line-height: 1.8;
+        color: var(--text-secondary);
+    }
+    
+    .tech-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: var(--bg-tertiary);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    
+    .tech-badge:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+</style>
+{% endblock %}

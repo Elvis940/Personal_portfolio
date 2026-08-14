@@ -1,0 +1,167 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Services - Admin Panel{% endblock %} {% block page_title %}Services{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <!-- Add Service Form -->
+        <div class="col-lg-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-plus me-2 text-primary"></i>Add New Service</h6>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Service Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea name="description" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Features</label>
+                            <textarea name="features" class="form-control" rows="3" placeholder="List features, one per line"></textarea>
+                            <small class="text-muted">e.g., Feature 1, Feature 2, Feature 3</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Technologies</label>
+                            <input type="text" name="technologies" class="form-control" placeholder="e.g., Python, Django, React">
+                            <small class="text-muted">Comma separated</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">FontAwesome Icon</label>
+                            <input type="text" name="icon" class="form-control" placeholder="fas fa-code">
+                            <small class="text-muted">e.g., fas fa-code, fas fa-globe, fab fa-python</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Service Image</label>
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="0">
+                            <small class="text-muted">Lower numbers appear first</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input">
+                                <label class="form-check-label">Featured Service</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_active" class="form-check-input" checked>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Add Service
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services List -->
+        <div class="col-lg-8">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-list me-2 text-primary"></i>All Services</h6>
+                    <span class="badge bg-primary">{{ services|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Icon</th>
+                                    <th>Name</th>
+                                    <th>Featured</th>
+                                    <th>Status</th>
+                                    <th>Order</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for service in services %}
+                                <tr>
+                                    <td>
+                                        {% if service.icon %}
+                                        <i class="{{ service.icon }} fa-2x" style="color: #6C63FF;"></i> {% else %}
+                                        <i class="fas fa-cube fa-2x text-muted"></i> {% endif %}
+                                    </td>
+                                    <td><strong>{{ service.name }}</strong></td>
+                                    <td>
+                                        {% if service.is_featured %}
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> Featured</span> {% else %}
+                                        <span class="badge bg-secondary">No</span> {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if service.is_active %}
+                                        <span class="badge bg-success">Active</span> {% else %}
+                                        <span class="badge bg-danger">Inactive</span> {% endif %}
+                                    </td>
+                                    <td>{{ service.order }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'dashboard:service_edit' service.id %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ service.id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Delete Modal -->
+                                        <div class="modal fade" id="deleteModal{{ service.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Delete Service</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete <strong>{{ service.name }}</strong>?</p>
+                                                        <p class="text-muted small">This action cannot be undone.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <form method="post" action="{% url 'dashboard:service_delete' service.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger">
+                                                                <i class="fas fa-trash me-1"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-4">
+                                        <i class="fas fa-concierge-bell fa-2x text-muted d-block mb-2"></i>
+                                        <p class="text-muted mb-0">No services added yet</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

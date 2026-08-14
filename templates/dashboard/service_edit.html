@@ -1,0 +1,93 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Edit Service - Admin Panel{% endblock %} {% block page_title %}Edit Service{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Service Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" value="{{ service.name }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Order</label>
+                            <input type="number" name="order" class="form-control" value="{{ service.order|default:0 }}">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                            <textarea name="description" class="form-control" rows="4" required>{{ service.description|default:'' }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Features</label>
+                            <textarea name="features" class="form-control" rows="4">{{ service.features|default:'' }}</textarea>
+                            <small class="text-muted">List features, one per line</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Technologies</label>
+                            <input type="text" name="technologies" class="form-control" value="{{ service.technologies|default:'' }}" placeholder="e.g., Python, Django, React">
+                            <small class="text-muted">Comma separated</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">FontAwesome Icon</label>
+                            <input type="text" name="icon" class="form-control" value="{{ service.icon|default:'' }}" placeholder="fas fa-code">
+                            <small class="text-muted">e.g., fas fa-code, fas fa-globe</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Service Image</label> {% if service.image %}
+                            <div class="mb-2">
+                                <img src="{{ service.image.url }}" alt="{{ service.name }}" style="max-height: 100px; border-radius: 8px;">
+                            </div>
+                            {% endif %}
+                            <input type="file" name="image" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input" {% if service.is_featured %}checked{% endif %}>
+                                <label class="form-check-label">Featured Service</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_active" class="form-check-input" {% if service.is_active %}checked{% endif %}>
+                                <label class="form-check-label">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Update Service
+                    </button>
+                    <a href="{% url 'dashboard:services' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

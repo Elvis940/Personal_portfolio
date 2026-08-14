@@ -1,0 +1,199 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %} {% if is_editing %}Edit{% else %}Add{% endif %} Blog Post - Admin Panel {% endblock %} {% block page_title %} {% if is_editing %}Edit{% else %}Add New{% endif %} Blog Post
+{% endblock %} {% block extra_css %}
+<!-- CKEditor for rich text editing -->
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<style>
+    .form-control:focus {
+        border-color: #6C63FF;
+        box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+    }
+    
+    .ck-editor__editable {
+        min-height: 300px;
+    }
+</style>
+{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <!-- Title -->
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" value="{{ post.title|default:'' }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Status</label>
+                            <div class="d-flex gap-3 mt-2">
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_published" class="form-check-input" {% if post and post.is_published %}checked{% endif %}>
+                                    <label class="form-check-label">Published</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_featured" class="form-check-input" {% if post and post.is_featured %}checked{% endif %}>
+                                    <label class="form-check-label">Featured</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Excerpt -->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Excerpt <span class="text-danger">*</span></label>
+                            <textarea name="excerpt" class="form-control" rows="3" required>{{ post.excerpt|default:'' }}</textarea>
+                            <small class="text-muted">Brief summary of the post (max 300 characters)</small>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Content <span class="text-danger">*</span></label>
+                            <textarea name="content" id="id_content" class="form-control" rows="10">{{ post.content|default:'' }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Featured Image -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Featured Image</label> {% if post and post.featured_image %}
+                            <div class="mb-2">
+                                <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="max-height: 150px; border-radius: 8px;">
+                            </div>
+                            {% endif %}
+                            <input type="file" name="featured_image" class="form-control" accept="image/*">
+                            <small class="text-muted">Upload a featured image (JPG, PNG, WebP)</small>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Categories</label>
+                            <select name="categories" class="form-select" multiple>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                        {% if post and category in post.categories.all %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tags</label>
+                            <select name="tags" class="form-select" multiple>
+                                {% for tag in tags %}
+                                    <option value="{{ tag.id }}" 
+                                        {% if post and tag in post.tags.all %}selected{% endif %}>
+                                        {{ tag.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>
+                        {% if is_editing %}Update{% else %}Create{% endif %} Post
+                    </button>
+                    <a href="{% url 'dashboard:blog_posts' %}" class="btn btn-outline-secondary">Cancel</a> {% if is_editing %}
+                    <button type="button" class="btn btn-outline-danger ms-auto" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </button> {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+{% if is_editing %}
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Blog Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong>{{ post.title }}</strong>?</p>
+                <p class="text-muted small">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'dashboard:blog_post_delete' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %} {% endblock %} {% block extra_js %}
+<script>
+    // Initialize CKEditor
+    CKEDITOR.replace('id_content', {
+        height: 400,
+        toolbar: [{
+                name: 'document',
+                items: ['Source', '-', 'NewPage', 'Preview', '-', 'Templates']
+            }, {
+                name: 'clipboard',
+                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+            }, {
+                name: 'editing',
+                items: ['Find', 'Replace', '-', 'SelectAll', '-', 'Scayt']
+            }, {
+                name: 'forms',
+                items: ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField']
+            },
+            '/', {
+                name: 'basicstyles',
+                items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+            }, {
+                name: 'paragraph',
+                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language']
+            }, {
+                name: 'links',
+                items: ['Link', 'Unlink', 'Anchor']
+            }, {
+                name: 'insert',
+                items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']
+            },
+            '/', {
+                name: 'styles',
+                items: ['Styles', 'Format', 'Font', 'FontSize']
+            }, {
+                name: 'colors',
+                items: ['TextColor', 'BGColor']
+            }, {
+                name: 'tools',
+                items: ['Maximize', 'ShowBlocks']
+            }, {
+                name: 'about',
+                items: ['About']
+            }
+        ]
+    });
+</script>
+{% endblock %}
