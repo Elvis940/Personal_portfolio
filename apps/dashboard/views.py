@@ -364,7 +364,6 @@ def project_edit(request, project_id):
         'project': project,
         'categories': categories,
         'technologies': technologies,
-        'status_choices': Project.Status.choices,
         'new_messages_count': ContactMessage.objects.filter(status='NEW').count(),
     }
     return render(request, 'dashboard/project_edit.html', context)

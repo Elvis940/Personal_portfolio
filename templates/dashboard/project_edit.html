@@ -1,0 +1,180 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Edit Project - Admin Panel{% endblock %} {% block page_title %}Edit Project{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label">Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" value="{{ project.title|default:'' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Summary <span class="text-danger">*</span></label>
+                            <input type="text" name="summary" class="form-control" value="{{ project.summary|default:'' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control" rows="5">{{ project.description|default:'' }}</textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">GitHub URL</label>
+                                    <input type="url" name="github_url" class="form-control" value="{{ project.github_url|default:'' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Live Demo URL</label>
+                                    <input type="url" name="live_demo_url" class="form-control" value="{{ project.live_demo_url|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Problem Statement</label>
+                            <textarea name="problem" class="form-control" rows="3">{{ project.problem|default:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Solution</label>
+                            <textarea name="solution" class="form-control" rows="3">{{ project.solution|default:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Features</label>
+                            <textarea name="features" class="form-control" rows="3">{{ project.features|default:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Challenges</label>
+                            <textarea name="challenges" class="form-control" rows="3">{{ project.challenges|default:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Lessons Learned</label>
+                            <textarea name="lessons_learned" class="form-control" rows="3">{{ project.lessons_learned|default:'' }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Featured Image</label> {% if project and project.featured_image %}
+                            <div class="mb-2">
+                                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-fluid rounded" style="max-height: 150px;">
+                            </div>
+                            {% endif %}
+                            <input type="file" name="featured_image" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="COMPLETED" {% if project.status == 'COMPLETED' %}selected{% endif %}>Completed</option>
+                                <option value="IN_PROGRESS" {% if project.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                                <option value="CONCEPT" {% if project.status == 'CONCEPT' %}selected{% endif %}>Concept</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categories</label>
+                            <select name="categories" class="form-select" multiple>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                        {% if project and category in project.categories.all %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Technologies</label>
+                            <select name="technologies" class="form-select" multiple>
+                                {% for tech in technologies %}
+                                    <option value="{{ tech.id }}" 
+                                        {% if project and tech in project.technologies.all %}selected{% endif %}>
+                                        {{ tech.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Hold Ctrl to select multiple</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_featured" class="form-check-input" {% if project and project.is_featured %}checked{% endif %}>
+                                <label class="form-check-label">Featured Project</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="is_published" class="form-check-input" {% if project and project.is_published %}checked{% endif %}>
+                                <label class="form-check-label">Published</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" name="start_date" class="form-control" value="{{ project.start_date|default:''|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" name="end_date" class="form-control" value="{{ project.end_date|default:''|date:'Y-m-d' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Update Project
+                    </button>
+                    <a href="{% url 'dashboard:projects' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="button" class="btn btn-outline-danger ms-auto" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong>{{ project.title }}</strong>?</p>
+                <p class="text-muted small">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'dashboard:project_delete' project.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
