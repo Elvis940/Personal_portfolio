@@ -51,12 +51,8 @@ def blog_list(request):
 def blog_detail(request, slug):
     """Blog post detail page"""
     post = get_object_or_404(BlogPost, slug=slug, is_published=True)
+    post.increment_view_count()
     
-    # Increment view count
-    post.view_count = post.view_count + 1
-    post.save(update_fields=['view_count'])
-    
-    # Get related posts (same category)
     related_posts = BlogPost.objects.filter(
         categories__in=post.categories.all(),
         is_published=True

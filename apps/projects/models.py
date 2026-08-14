@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from ckeditor.fields import RichTextField
@@ -7,10 +8,10 @@ from ckeditor.fields import RichTextField
 class Technology(models.Model):
     """Technologies used in projects"""
     
-    name = models.CharField(max_length=1000, unique=True)  # Was 50
-    icon = models.CharField(max_length=1000, blank=True, help_text="FontAwesome icon class")  # Was 50
+    name = models.CharField(max_length=1000, unique=True)
+    icon = models.CharField(max_length=1000, blank=True, help_text="FontAwesome icon class")
     color = models.CharField(max_length=20, default='#6c757d', help_text="Hex color code")
-    category = models.CharField(max_length=1000, blank=True)  # Was 50
+    category = models.CharField(max_length=1000, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -25,10 +26,10 @@ class Technology(models.Model):
 class ProjectCategory(models.Model):
     """Categories for projects"""
     
-    name = models.CharField(max_length=1000, unique=True)  # Was 50
-    slug = models.SlugField(max_length=1000, unique=True, blank=True)  # Was 50
+    name = models.CharField(max_length=1000, unique=True)
+    slug = models.SlugField(max_length=1000, unique=True, blank=True)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=1000, blank=True)  # Was 50
+    icon = models.CharField(max_length=1000, blank=True)
     color = models.CharField(max_length=20, default='#0d6efd')
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,7 +41,7 @@ class ProjectCategory(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.name)[:1000]
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -55,10 +56,10 @@ class Project(models.Model):
         IN_PROGRESS = 'IN_PROGRESS', 'In Progress'
         CONCEPT = 'CONCEPT', 'Concept'
     
-    # Basic Information - MAX LENGTHS INCREASED
-    title = models.CharField(max_length=1000)  # Was 200
-    slug = models.SlugField(max_length=1000, unique=True, blank=True)  # Was default
-    summary = models.CharField(max_length=20000)  # Keeping at 20000
+    # Basic Information
+    title = models.CharField(max_length=1000)
+    slug = models.SlugField(max_length=1000, unique=True, blank=True)
+    summary = models.CharField(max_length=20000)
     description = RichTextField(blank=True)
     
     # Project Details
@@ -68,32 +69,34 @@ class Project(models.Model):
     challenges = models.TextField(blank=True, help_text="Challenges faced during development")
     lessons_learned = models.TextField(blank=True)
     
-    # Media
-    featured_image = models.ImageField(
-        upload_to='projects/featured/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])]
-    )
-    screenshots = models.ImageField(
-        upload_to='projects/screenshots/',
-        blank=True,
+    # Media - Using CloudinaryField
+    featured_image = CloudinaryField(
+        'image', 
+        folder='elvis_portfolio/projects',
+        blank=True, 
         null=True
     )
-    architecture_diagram = models.ImageField(
-        upload_to='projects/architecture/',
-        blank=True,
+    screenshots = CloudinaryField(
+        'image', 
+        folder='elvis_portfolio/screenshots',
+        blank=True, 
+        null=True
+    )
+    architecture_diagram = CloudinaryField(
+        'image', 
+        folder='elvis_portfolio/architecture',
+        blank=True, 
         null=True
     )
     
     # Links
-    github_url = models.URLField(blank=True, max_length=1000)  # Added max_length
-    live_demo_url = models.URLField(blank=True, max_length=1000)  # Added max_length
+    github_url = models.URLField(blank=True, max_length=1000)
+    live_demo_url = models.URLField(blank=True, max_length=1000)
     
     # Organization
     categories = models.ManyToManyField(ProjectCategory, blank=True)
     technologies = models.ManyToManyField(Technology, blank=True)
-    status = models.CharField(max_length=100, choices=Status.choices, default=Status.COMPLETED)  # Was 30
+    status = models.CharField(max_length=100, choices=Status.choices, default=Status.COMPLETED)
     
     # Dates
     start_date = models.DateField(blank=True, null=True)
@@ -105,9 +108,9 @@ class Project(models.Model):
     order = models.IntegerField(default=0)
     view_count = models.PositiveIntegerField(default=0)
     
-    # SEO - MAX LENGTHS INCREASED
-    meta_title = models.CharField(max_length=1000, blank=True)  # Was 200
-    meta_description = models.CharField(max_length=2000, blank=True)  # Was 300
+    # SEO
+    meta_title = models.CharField(max_length=1000, blank=True)
+    meta_description = models.CharField(max_length=2000, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -119,7 +122,7 @@ class Project(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)[:1000]  # Truncate to max length
+            self.slug = slugify(self.title)[:1000]
         if not self.meta_title:
             self.meta_title = self.title[:1000]
         if not self.meta_description:
@@ -142,11 +145,8 @@ class ProjectImage(models.Model):
     """Additional images for projects"""
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(
-        upload_to='projects/images/',
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])]
-    )
-    caption = models.CharField(max_length=1000, blank=True)  # Was 200
+    image = CloudinaryField('image', folder='elvis_portfolio/project_images', blank=True, null=True)
+    caption = models.CharField(max_length=1000, blank=True)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     

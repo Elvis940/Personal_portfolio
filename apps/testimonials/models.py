@@ -1,24 +1,20 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.core.validators import FileExtensionValidator
 
 
 class Testimonial(models.Model):
     """Client testimonials"""
     
-    name = models.CharField(max_length=500)  # Was 100
-    position = models.CharField(max_length=500, blank=True)  # Was 100
-    company = models.CharField(max_length=500, blank=True)  # Was 100
+    name = models.CharField(max_length=500)
+    position = models.CharField(max_length=500, blank=True)
+    company = models.CharField(max_length=500, blank=True)
     content = models.TextField()
     rating = models.PositiveIntegerField(
         default=5, 
         choices=[(1, '1 Star'), (2, '2 Stars'), (3, '3 Stars'), (4, '4 Stars'), (5, '5 Stars')]
     )
-    image = models.ImageField(
-        upload_to='testimonials/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])]
-    )
+    image = CloudinaryField('image', folder='elvis_portfolio/testimonials', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
@@ -38,7 +34,6 @@ class Testimonial(models.Model):
         return f"{self.name} {self.position}"
     
     def get_rating_stars(self):
-        """Return HTML for star rating"""
         stars = ''
         for i in range(5):
             if i < self.rating:

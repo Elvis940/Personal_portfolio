@@ -283,8 +283,11 @@ def project_create(request):
         is_published = request.POST.get('is_published') == 'on'
         github_url = request.POST.get('github_url')
         live_demo_url = request.POST.get('live_demo_url')
-        
-        featured_image = request.FILES.get('featured_image')
+        problem = request.POST.get('problem')
+        solution = request.POST.get('solution')
+        features = request.POST.get('features')
+        challenges = request.POST.get('challenges')
+        lessons_learned = request.POST.get('lessons_learned')
         
         project = Project.objects.create(
             title=title,
@@ -295,8 +298,17 @@ def project_create(request):
             is_published=is_published,
             github_url=github_url,
             live_demo_url=live_demo_url,
-            featured_image=featured_image
+            problem=problem,
+            solution=solution,
+            features=features,
+            challenges=challenges,
+            lessons_learned=lessons_learned,
         )
+        
+        # Handle image upload - automatically goes to Cloudinary
+        if request.FILES.get('featured_image'):
+            project.featured_image = request.FILES.get('featured_image')
+            project.save()
         
         category_ids = request.POST.getlist('categories')
         if category_ids:
@@ -343,8 +355,7 @@ def project_edit(request, project_id):
         
         if request.FILES.get('featured_image'):
             project.featured_image = request.FILES.get('featured_image')
-        
-        project.save()
+            project.save()
         
         category_ids = request.POST.getlist('categories')
         if category_ids:
@@ -367,7 +378,6 @@ def project_edit(request, project_id):
         'new_messages_count': ContactMessage.objects.filter(status='NEW').count(),
     }
     return render(request, 'dashboard/project_edit.html', context)
-
 
 @check_login
 def project_delete(request, project_id):

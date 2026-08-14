@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxLengthValidator
+from django.core.validators import MinLengthValidator
 from django.utils import timezone
 
 
@@ -40,34 +40,34 @@ class ContactMessage(models.Model):
         FLEXIBLE = 'FLEXIBLE', 'Flexible'
         NOT_SPECIFIED = 'NOT_SPECIFIED', 'Not Specified'
     
-    # Contact Information - BIG NUMBERS
-    first_name = models.CharField(max_length=1000)  # Was 100
-    last_name = models.CharField(max_length=1000)   # Was 100
-    email = models.EmailField(max_length=1000)      # Added max_length
-    phone = models.CharField(max_length=100, blank=True)  # Was 20
+    # Contact Information
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=1000)
+    phone = models.CharField(max_length=100, blank=True)
     
-    # Message Details - BIG NUMBERS
-    subject = models.CharField(max_length=1000)  # Was 300
+    # Message Details
+    subject = models.CharField(max_length=1000)
     project_type = models.CharField(
-        max_length=100,  # Was 50
+        max_length=100,
         choices=ProjectType.choices,
         default=ProjectType.OTHER
     )
     budget = models.CharField(
-        max_length=100,  # Was 30
+        max_length=100,
         choices=BudgetRange.choices,
         default=BudgetRange.NOT_SPECIFIED
     )
     timeline = models.CharField(
-        max_length=100,  # Was 30
+        max_length=100,
         choices=Timeline.choices,
         default=Timeline.FLEXIBLE
     )
     message = models.TextField(validators=[MinLengthValidator(10)])
     
-    # Status Tracking - BIG NUMBERS
+    # Status Tracking
     status = models.CharField(
-        max_length=100,  # Was 30
+        max_length=100,
         choices=Status.choices,
         default=Status.NEW
     )
@@ -76,7 +76,7 @@ class ContactMessage(models.Model):
     # Metadata
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     user_agent = models.TextField(blank=True)
-    referrer = models.URLField(blank=True, max_length=1000)  # Added max_length
+    referrer = models.URLField(blank=True, max_length=1000)
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,13 +101,11 @@ class ContactMessage(models.Model):
         return f"{self.first_name} {self.last_name}"
     
     def mark_contacted(self):
-        """Mark the message as contacted"""
         self.status = self.Status.CONTACTED
         self.contacted_at = timezone.now()
         self.save()
     
     def update_status(self, new_status):
-        """Update the status of the message"""
         if new_status in [choice[0] for choice in self.Status.choices]:
             self.status = new_status
             if new_status == self.Status.CONTACTED and not self.contacted_at:
