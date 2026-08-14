@@ -58,7 +58,7 @@ class Project(models.Model):
     # Basic Information - INCREASED FIELD LENGTHS
     title = models.CharField(max_length=200)  # Was 100
     slug = models.SlugField(unique=True, blank=True)
-    summary = models.CharField(max_length=500)  # Was 200
+    summary = models.CharField(max_length=20000)  # Was 200
     description = RichTextField(blank=True)
     
     # Project Details
