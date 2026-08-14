@@ -1,0 +1,25 @@
+{
+    "name": "Elvis T. Harmon - Software Engineer",
+    "short_name": "Elvis Harmon",
+    "description": "Building intelligent software that solves real problems.",
+    "theme_color": "#6C63FF",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "images/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "images/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "images/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        }
+    ]
+}
