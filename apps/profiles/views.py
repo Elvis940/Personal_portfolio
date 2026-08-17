@@ -80,3 +80,38 @@ def about(request):
     }
     
     return render(request, 'core/about.html', context)
+
+
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.core.files.storage import default_storage
+import requests
+import os
+from .models import Profile
+
+
+def download_cv(request):
+    """Download CV from Cloudinary"""
+    profile = Profile.objects.first()
+    
+    if not profile or not profile.resume_pdf:
+        return HttpResponse("CV not available", status=404)
+    
+    try:
+        # Get the Cloudinary URL
+        file_url = profile.resume_pdf.url
+        
+        # Download the file from Cloudinary
+        response = requests.get(file_url)
+        
+        if response.status_code == 200:
+            # Create HTTP response with PDF
+            http_response = HttpResponse(response.content, content_type='application/pdf')
+            http_response['Content-Disposition'] = 'attachment; filename="Elvis_Harmon_CV.pdf"'
+            http_response['Content-Length'] = len(response.content)
+            return http_response
+        else:
+            return HttpResponse("Error downloading CV", status=404)
+            
+    except Exception as e:
+        return HttpResponse(f"Error: {str(e)}", status=500)

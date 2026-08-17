@@ -1,7 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
-from django.core.validators import FileExtensionValidator
 from ckeditor.fields import RichTextField
 
 
@@ -70,24 +69,9 @@ class Project(models.Model):
     lessons_learned = models.TextField(blank=True)
     
     # Media - Using CloudinaryField
-    featured_image = CloudinaryField(
-        'image', 
-        folder='elvis_portfolio/projects',
-        blank=True, 
-        null=True
-    )
-    screenshots = CloudinaryField(
-        'image', 
-        folder='elvis_portfolio/screenshots',
-        blank=True, 
-        null=True
-    )
-    architecture_diagram = CloudinaryField(
-        'image', 
-        folder='elvis_portfolio/architecture',
-        blank=True, 
-        null=True
-    )
+    featured_image = CloudinaryField('image', folder='elvis_portfolio/projects', blank=True, null=True)
+    screenshots = CloudinaryField('image', folder='elvis_portfolio/screenshots', blank=True, null=True)
+    architecture_diagram = CloudinaryField('image', folder='elvis_portfolio/architecture', blank=True, null=True)
     
     # Links
     github_url = models.URLField(blank=True, max_length=1000)

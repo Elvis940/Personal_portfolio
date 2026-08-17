@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.http import HttpResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,19 +14,14 @@ urlpatterns = [
     path('blog/', include('apps.blog.urls')),
     path('services/', include('apps.services.urls')),
     path('contact/', include('apps.contact.urls')),
-    path('profile/', include('apps.profiles.urls')),
+    path('profile/', include('apps.profiles.urls')),  # This must exist!
     path('testimonials/', include('apps.testimonials.urls')),
     
-    # Dashboard (custom admin)
+    # Dashboard
     path('dashboard/', include('apps.dashboard.urls')),
-    path('analytics/', include('apps.analytics.urls')),  # Make sure this exists
     
-    
-    # Robots.txt
-    path('robots.txt', lambda request: HttpResponse(
-        "User-agent: *\nDisallow: /admin/\nDisallow: /dashboard/\nSitemap: /sitemap.xml",
-        content_type="text/plain"
-    )),
+    # Analytics
+    path('analytics/', include('apps.analytics.urls')),
 ]
 
 if settings.DEBUG:

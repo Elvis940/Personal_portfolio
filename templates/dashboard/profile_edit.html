@@ -211,22 +211,33 @@
                     </div>
 
                     <!-- ======================================== -->
-                    <!-- RESUME UPLOAD -->
+                    <!-- RESUME UPLOAD - UPDATED FOR BINARYFIELD -->
                     <!-- ======================================== -->
                     <div class="col-12 mt-3">
                         <h5 class="fw-bold border-bottom pb-2 mb-3">
                             <i class="fas fa-file-pdf me-2 text-primary"></i>Resume / CV
                         </h5>
+                        <p class="text-muted small">Upload your resume as a PDF file. It will be stored securely in the database.</p>
                     </div>
 
                     <div class="col-md-12">
                         <label class="form-label">Upload Resume (PDF)</label>
                         <input type="file" name="resume_pdf" class="form-control" accept=".pdf"> {% if profile and profile.resume_pdf %}
-                        <small class="text-muted d-block mt-1">
-                            Current: <a href="{{ profile.resume_pdf.url }}" target="_blank" class="text-primary">
-                                <i class="fas fa-file-pdf me-1"></i>View Resume
-                            </a>
-                        </small> {% endif %}
+                        <div class="mt-2 p-2 bg-light rounded">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                <strong>Current Resume:</strong> {{ profile.resume_filename|default:"Resume.pdf" }}
+                                <br>
+                                <span class="text-muted">Size: {{ profile.resume_pdf|length|filesizeformat }}</span>
+                            </small>
+                            <div class="mt-1">
+                                <a href="{% url 'core:download_cv' %}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-file-pdf me-1"></i>Download Current Resume
+                                </a>
+                            </div>
+                        </div>
+                        {% else %}
+                        <small class="text-muted d-block mt-1">No resume uploaded yet. Please upload a PDF file.</small> {% endif %}
                     </div>
                 </div>
 
@@ -276,6 +287,25 @@
                         }
                     };
                     reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Show file name when resume is selected
+        const resumeInput = document.querySelector('input[name="resume_pdf"]');
+        if (resumeInput) {
+            resumeInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const fileNameDisplay = document.createElement('div');
+                    fileNameDisplay.className = 'small text-success mt-1';
+                    fileNameDisplay.innerHTML = `<i class="fas fa-file-pdf me-1"></i>Selected: ${file.name}`;
+
+                    // Remove any existing file name display
+                    const existing = this.parentElement.querySelector('.text-success');
+                    if (existing) existing.remove();
+
+                    this.parentElement.appendChild(fileNameDisplay);
                 }
             });
         }

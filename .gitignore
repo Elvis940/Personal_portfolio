@@ -2,12 +2,13 @@
 .env
 .env.local
 .env.production
+.env.*.local
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
 env/
 venv/
@@ -22,11 +23,8 @@ venv.bak/
 __pycache__/
 db.sqlite3
 db.sqlite3-journal
+media/
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 5a97179 (Add favicon files and update .gitignore)
 
 # IDE
 .vscode/
@@ -35,3 +33,9 @@ db.sqlite3-journal
 *.swo
 *~
 .DS_Store
+
+# Cloudinary
+cloudinary/
+
+# Render
+render.yaml

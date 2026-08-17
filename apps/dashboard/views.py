@@ -1,19 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Q
-from django.utils import timezone
-from datetime import datetime, timedelta
-from django.core.paginator import Paginator
-from apps.core.models import SiteSettings
-from apps.contact.models import ContactMessage
-from apps.projects.models import Project, ProjectCategory, Technology
-from apps.profiles.models import Profile, Skill, Experience, Education, Certification
-from apps.services.models import Service
-from apps.testimonials.models import Testimonial
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -21,6 +7,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 import os
 
+# Import all models
 from apps.contact.models import ContactMessage
 from apps.projects.models import Project, ProjectCategory, Technology
 from apps.blog.models import BlogPost, BlogCategory, BlogTag
@@ -28,7 +15,7 @@ from apps.profiles.models import Profile, Skill, Experience, Education, Certific
 from apps.services.models import Service
 from apps.testimonials.models import Testimonial
 from apps.analytics.models import AnalyticsEvent
-from apps.blog.forms import BlogPostForm
+from apps.core.models import SiteSettings
 
 
 
@@ -41,7 +28,6 @@ def admin_login(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        # Your credentials
         if email == "harmonelvis78@gmail.com" and password == "Godiswilling231@":
             request.session['admin_logged_in'] = True
             request.session['admin_email'] = email
@@ -74,102 +60,70 @@ def check_login(view_func):
 def dashboard(request):
     """Main admin dashboard"""
     
-    # Messages stats
     total_messages = ContactMessage.objects.count()
     new_messages = ContactMessage.objects.filter(status='NEW').count()
     contacted_messages = ContactMessage.objects.filter(status='CONTACTED').count()
     in_discussion = ContactMessage.objects.filter(status='IN_DISCUSSION').count()
     completed_messages = ContactMessage.objects.filter(status='COMPLETED').count()
     
-    # Recent messages
     recent_messages = ContactMessage.objects.order_by('-created_at')[:10]
     
-    # Weekly stats
     week_ago = timezone.now() - timedelta(days=7)
     weekly_messages = ContactMessage.objects.filter(created_at__gte=week_ago).count()
     weekly_new = ContactMessage.objects.filter(created_at__gte=week_ago, status='NEW').count()
     
-    # Projects stats
     total_projects = Project.objects.count()
     published_projects = Project.objects.filter(is_published=True).count()
     featured_projects = Project.objects.filter(is_featured=True).count()
     
-    # Blog stats
-    from apps.blog.models import BlogPost
     total_blog_posts = BlogPost.objects.count()
     published_posts = BlogPost.objects.filter(is_published=True).count()
     
-    # Testimonials stats
-    from apps.testimonials.models import Testimonial
     total_testimonials = Testimonial.objects.count()
     featured_testimonials = Testimonial.objects.filter(is_featured=True, is_active=True).count()
     
-    # Services stats
-    from apps.services.models import Service
     total_services = Service.objects.count()
     active_services = Service.objects.filter(is_active=True).count()
     
-    # Skills stats
     total_skills = Skill.objects.count()
     featured_skills = Skill.objects.filter(is_featured=True).count()
     
-    # Experience stats
     total_experience = Experience.objects.count()
     current_experience = Experience.objects.filter(is_current=True).count()
     
-    # Education stats
     total_education = Education.objects.count()
     completed_education = Education.objects.filter(is_current=False).count()
     
-    # Certifications stats
     total_certifications = Certification.objects.count()
     verified_certifications = Certification.objects.filter(is_verified=True).count()
     
     context = {
-        # Messages
         'total_messages': total_messages,
         'new_messages': new_messages,
+        'new_messages_count': new_messages,
         'contacted_messages': contacted_messages,
         'in_discussion': in_discussion,
         'completed_messages': completed_messages,
         'recent_messages': recent_messages,
         'weekly_messages': weekly_messages,
         'weekly_new': weekly_new,
-        
-        # Projects
         'total_projects': total_projects,
         'published_projects': published_projects,
         'featured_projects': featured_projects,
-        
-        # Blog
         'total_blog_posts': total_blog_posts,
         'published_posts': published_posts,
-        
-        # Testimonials
         'total_testimonials': total_testimonials,
         'featured_testimonials': featured_testimonials,
-        
-        # Services
         'total_services': total_services,
         'active_services': active_services,
-        
-        # Skills
         'total_skills': total_skills,
         'featured_skills': featured_skills,
-        
-        # Experience
         'total_experience': total_experience,
         'current_experience': current_experience,
-        
-        # Education
         'total_education': total_education,
         'completed_education': completed_education,
-        
-        # Certifications
         'total_certifications': total_certifications,
         'verified_certifications': verified_certifications,
-        
-        'new_messages_count': new_messages,
         'admin_email': request.session.get('admin_email', 'harmonelvis78@gmail.com'),
     }
     
@@ -202,7 +156,6 @@ def messages_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    # Get status counts
     status_counts = ContactMessage.objects.values('status').annotate(count=Count('id'))
     status_count_dict = {item['status']: item['count'] for item in status_counts}
     
@@ -305,7 +258,6 @@ def project_create(request):
             lessons_learned=lessons_learned,
         )
         
-        # Handle image upload - automatically goes to Cloudinary
         if request.FILES.get('featured_image'):
             project.featured_image = request.FILES.get('featured_image')
             project.save()
@@ -379,6 +331,7 @@ def project_edit(request, project_id):
     }
     return render(request, 'dashboard/project_edit.html', context)
 
+
 @check_login
 def project_delete(request, project_id):
     """Delete a project"""
@@ -413,7 +366,7 @@ def profile_edit(request):
         profile.hero_subtitle = request.POST.get('hero_subtitle', 'That Solves Real Problems')
         profile.welcome_text = request.POST.get('welcome_text', "Hello, I'm")
         profile.hero_description = request.POST.get('hero_description', 
-            'A passionate software engineer dedicated to building innovative solutions that make a difference. Specializing in full-stack development, artificial intelligence, and creating impactful technology.')
+            'A passionate software engineer dedicated to building innovative solutions that make a difference.')
         
         # Professional Information
         profile.title = request.POST.get('title', 'Senior Software Engineer')
@@ -434,13 +387,18 @@ def profile_edit(request):
         profile.footer_phone = request.POST.get('footer_phone', '+1 (555) 123-4567')
         profile.footer_location = request.POST.get('footer_location', 'San Francisco, CA')
         
-        # Media
+        # Profile Images
         if request.FILES.get('profile_image'):
             profile.profile_image = request.FILES.get('profile_image')
         if request.FILES.get('about_image'):
             profile.about_image = request.FILES.get('about_image')
+        
+        # Resume Upload - Read the file and store in BinaryField
         if request.FILES.get('resume_pdf'):
-            profile.resume_pdf = request.FILES.get('resume_pdf')
+            resume_file = request.FILES.get('resume_pdf')
+            # Read the file content as bytes
+            profile.resume_file = resume_file.read()
+            profile.resume_filename = resume_file.name
         
         profile.save()
         messages.success(request, 'Profile updated successfully!')
@@ -451,6 +409,7 @@ def profile_edit(request):
         'new_messages_count': ContactMessage.objects.filter(status='NEW').count(),
     }
     return render(request, 'dashboard/profile_edit.html', context)
+
 
 @check_login
 def skills_list(request):
@@ -746,7 +705,6 @@ def certification_delete(request, cert_id):
     return redirect('dashboard:certifications')
 
 
-
 @check_login
 def services_list(request):
     """Manage services"""
@@ -829,12 +787,6 @@ def service_delete(request, service_id):
 
 @check_login
 def testimonials_list(request):
-    context = {'new_messages_count': ContactMessage.objects.filter(status='NEW').count()}
-    return render(request, 'dashboard/testimonials.html', context)
-
-
-@check_login
-def testimonials_list(request):
     """Manage testimonials"""
     testimonials = Testimonial.objects.all().order_by('order')
     
@@ -913,79 +865,6 @@ def testimonial_delete(request, testimonial_id):
     return redirect('dashboard:testimonials')
 
 
-
-@check_login
-def site_settings(request):
-    """Site settings management"""
-    settings = SiteSettings.get_settings()
-    
-    if request.method == 'POST':
-        # General Settings
-        settings.site_name = request.POST.get('site_name')
-        settings.site_tagline = request.POST.get('site_tagline')
-        settings.site_description = request.POST.get('site_description')
-        
-        # Email Settings
-        settings.admin_email = request.POST.get('admin_email')
-        settings.default_from_email = request.POST.get('default_from_email')
-        settings.email_subject_prefix = request.POST.get('email_subject_prefix')
-        
-        # Social Media Links
-        settings.github_url = request.POST.get('github_url')
-        settings.linkedin_url = request.POST.get('linkedin_url')
-        settings.twitter_url = request.POST.get('twitter_url')
-        settings.youtube_url = request.POST.get('youtube_url')
-        settings.facebook_url = request.POST.get('facebook_url')
-        settings.instagram_url = request.POST.get('instagram_url')
-        
-        # Appearance Settings
-        settings.primary_color = request.POST.get('primary_color')
-        settings.secondary_color = request.POST.get('secondary_color')
-        settings.accent_color = request.POST.get('accent_color')
-        settings.font_family = request.POST.get('font_family')
-        settings.default_theme = request.POST.get('default_theme')
-        
-        # SEO Settings
-        settings.meta_title = request.POST.get('meta_title')
-        settings.meta_description = request.POST.get('meta_description')
-        settings.meta_keywords = request.POST.get('meta_keywords')
-        settings.google_analytics_id = request.POST.get('google_analytics_id')
-        
-        # Footer Settings
-        settings.footer_copyright = request.POST.get('footer_copyright')
-        settings.footer_about = request.POST.get('footer_about')
-        settings.footer_email = request.POST.get('footer_email')
-        settings.footer_phone = request.POST.get('footer_phone')
-        settings.footer_location = request.POST.get('footer_location')
-        settings.footer_quick_links = request.POST.get('footer_quick_links')
-        settings.footer_services = request.POST.get('footer_services')
-        
-        # Advanced Settings
-        settings.site_url = request.POST.get('site_url')
-        settings.maintenance_mode = request.POST.get('maintenance_mode') == 'on'
-        settings.maintenance_message = request.POST.get('maintenance_message')
-        settings.analytics_code = request.POST.get('analytics_code')
-        settings.custom_css = request.POST.get('custom_css')
-        settings.custom_js = request.POST.get('custom_js')
-        settings.robots_txt = request.POST.get('robots_txt')
-        
-        settings.save()
-        messages.success(request, 'Site settings updated successfully!')
-        return redirect('dashboard:site_settings')
-    
-    context = {
-        'settings': settings,
-        'new_messages_count': ContactMessage.objects.filter(status='NEW').count(),
-    }
-    return render(request, 'dashboard/site_settings.html', context)
-
-
-@check_login
-def analytics_view(request):
-    context = {'new_messages_count': ContactMessage.objects.filter(status='NEW').count()}
-    return render(request, 'dashboard/analytics.html', context)
-
-
 @check_login
 def technologies_list(request):
     """Manage technologies"""
@@ -1025,6 +904,71 @@ def technology_delete(request, tech_id):
 
 
 @check_login
+def site_settings(request):
+    """Site settings management"""
+    settings = SiteSettings.get_settings()
+    
+    if request.method == 'POST':
+        settings.site_name = request.POST.get('site_name')
+        settings.site_tagline = request.POST.get('site_tagline')
+        settings.site_description = request.POST.get('site_description')
+        
+        settings.admin_email = request.POST.get('admin_email')
+        settings.default_from_email = request.POST.get('default_from_email')
+        settings.email_subject_prefix = request.POST.get('email_subject_prefix')
+        
+        settings.github_url = request.POST.get('github_url')
+        settings.linkedin_url = request.POST.get('linkedin_url')
+        settings.twitter_url = request.POST.get('twitter_url')
+        settings.youtube_url = request.POST.get('youtube_url')
+        settings.facebook_url = request.POST.get('facebook_url')
+        settings.instagram_url = request.POST.get('instagram_url')
+        
+        settings.primary_color = request.POST.get('primary_color')
+        settings.secondary_color = request.POST.get('secondary_color')
+        settings.accent_color = request.POST.get('accent_color')
+        settings.font_family = request.POST.get('font_family')
+        settings.default_theme = request.POST.get('default_theme')
+        
+        settings.meta_title = request.POST.get('meta_title')
+        settings.meta_description = request.POST.get('meta_description')
+        settings.meta_keywords = request.POST.get('meta_keywords')
+        settings.google_analytics_id = request.POST.get('google_analytics_id')
+        
+        settings.footer_copyright = request.POST.get('footer_copyright')
+        settings.footer_about = request.POST.get('footer_about')
+        settings.footer_email = request.POST.get('footer_email')
+        settings.footer_phone = request.POST.get('footer_phone')
+        settings.footer_location = request.POST.get('footer_location')
+        settings.footer_quick_links = request.POST.get('footer_quick_links')
+        settings.footer_services = request.POST.get('footer_services')
+        
+        settings.site_url = request.POST.get('site_url')
+        settings.maintenance_mode = request.POST.get('maintenance_mode') == 'on'
+        settings.maintenance_message = request.POST.get('maintenance_message')
+        settings.analytics_code = request.POST.get('analytics_code')
+        settings.custom_css = request.POST.get('custom_css')
+        settings.custom_js = request.POST.get('custom_js')
+        settings.robots_txt = request.POST.get('robots_txt')
+        
+        settings.save()
+        messages.success(request, 'Site settings updated successfully!')
+        return redirect('dashboard:site_settings')
+    
+    context = {
+        'settings': settings,
+        'new_messages_count': ContactMessage.objects.filter(status='NEW').count(),
+    }
+    return render(request, 'dashboard/site_settings.html', context)
+
+
+@check_login
+def analytics_view(request):
+    context = {'new_messages_count': ContactMessage.objects.filter(status='NEW').count()}
+    return render(request, 'dashboard/analytics.html', context)
+
+
+@check_login
 def blog_posts(request):
     """Manage blog posts"""
     posts = BlogPost.objects.all().order_by('-created_at')
@@ -1048,7 +992,6 @@ def blog_post_create(request):
         categories = request.POST.getlist('categories')
         tags = request.POST.getlist('tags')
         
-        # Create the post
         post = BlogPost.objects.create(
             title=title,
             excerpt=excerpt,
@@ -1057,16 +1000,13 @@ def blog_post_create(request):
             is_featured=is_featured,
         )
         
-        # Add featured image if uploaded
         if request.FILES.get('featured_image'):
             post.featured_image = request.FILES.get('featured_image')
             post.save()
         
-        # Add categories
         if categories:
             post.categories.set(categories)
         
-        # Add tags
         if tags:
             post.tags.set(tags)
         
@@ -1094,20 +1034,17 @@ def blog_post_edit(request, post_id):
         post.is_published = request.POST.get('is_published') == 'on'
         post.is_featured = request.POST.get('is_featured') == 'on'
         
-        # Update featured image if uploaded
         if request.FILES.get('featured_image'):
             post.featured_image = request.FILES.get('featured_image')
         
         post.save()
         
-        # Update categories
         categories = request.POST.getlist('categories')
         if categories:
             post.categories.set(categories)
         else:
             post.categories.clear()
         
-        # Update tags
         tags = request.POST.getlist('tags')
         if tags:
             post.tags.set(tags)

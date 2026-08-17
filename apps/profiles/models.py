@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
 from django.core.validators import FileExtensionValidator
 from ckeditor.fields import RichTextField
@@ -27,9 +28,9 @@ class Profile(models.Model):
     bio = RichTextField(blank=True, null=True)
     short_bio = models.TextField(max_length=500, blank=True, null=True)
     
-    # Hero Description (paragraph after typewriter)
+    # Hero Description
     hero_description = models.TextField(max_length=500, blank=True, null=True, 
-        default='A passionate software engineer dedicated to building innovative solutions that make a difference. Specializing in full-stack development, artificial intelligence, and creating impactful technology.')
+        default='A passionate software engineer dedicated to building innovative solutions that make a difference.')
     
     # Social Links
     github_url = models.URLField(blank=True, null=True)
@@ -42,32 +43,17 @@ class Profile(models.Model):
     footer_bio = models.TextField(max_length=300, blank=True, null=True, 
         default='Building intelligent software that solves real problems.')
     footer_copyright = models.CharField(max_length=200, blank=True, null=True, default='All rights reserved.')
-    
-    # Footer Contact Info
     footer_email = models.EmailField(blank=True, null=True, default='harmonelvis78@gmail.com')
     footer_phone = models.CharField(max_length=20, blank=True, null=True, default='+1 (555) 123-4567')
     footer_location = models.CharField(max_length=100, blank=True, null=True, default='San Francisco, CA')
     
-    # Profile Media
-    profile_image = models.ImageField(
-        upload_to='profiles/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])]
-    )
-    about_image = models.ImageField(
-        upload_to='profiles/about/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'webp'])],
-        help_text='Square image for the about page (recommended: 400x400px or larger)'
-    )
-    resume_pdf = models.FileField(
-        upload_to='resumes/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['pdf'])]
-    )
+    # Profile Media - Images on Cloudinary
+    profile_image = CloudinaryField('image', folder='elvis_portfolio/profiles', blank=True, null=True)
+    about_image = CloudinaryField('image', folder='elvis_portfolio/about', blank=True, null=True)
+    
+    # Resume - Store in database
+    resume_file = models.BinaryField(blank=True, null=True)
+    resume_filename = models.CharField(max_length=255, blank=True, null=True)
     
     # Meta
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -93,6 +79,87 @@ class Profile(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+    """Professional profile for Elvis T. Harmon"""
+    
+    # Personal Information
+    first_name = models.CharField(max_length=50, default='Elvis')
+    last_name = models.CharField(max_length=50, default='Harmon')
+    display_name = models.CharField(max_length=100, blank=True, default='Elvis T. Harmon')
+    email = models.EmailField(default='harmonelvis78@gmail.com')
+    phone = models.CharField(max_length=20, blank=True, default='+1 (555) 123-4567')
+    location = models.CharField(max_length=100, blank=True, default='San Francisco, CA')
+    
+    # Hero Section Content
+    hero_badge = models.CharField(max_length=100, blank=True, null=True, default='Software Engineer')
+    hero_title = models.CharField(max_length=200, blank=True, null=True, default='Building Intelligent Software')
+    hero_subtitle = models.CharField(max_length=200, blank=True, null=True, default='That Solves Real Problems')
+    welcome_text = models.CharField(max_length=100, blank=True, null=True, default="Hello, I'm")
+    
+    # Professional Information
+    title = models.CharField(max_length=100, blank=True, null=True, default='Senior Software Engineer')
+    headline = models.CharField(max_length=200, blank=True, null=True, default='Building Intelligent Software That Solves Real Problems')
+    bio = RichTextField(blank=True, null=True)
+    short_bio = models.TextField(max_length=500, blank=True, null=True)
+    
+    # Hero Description
+    hero_description = models.TextField(max_length=500, blank=True, null=True, 
+        default='A passionate software engineer dedicated to building innovative solutions that make a difference. Specializing in full-stack development, artificial intelligence, and creating impactful technology.')
+    
+    # Social Links
+    github_url = models.URLField(blank=True, null=True)
+    linkedin_url = models.URLField(blank=True, null=True)
+    twitter_url = models.URLField(blank=True, null=True)
+    youtube_url = models.URLField(blank=True, null=True)
+    website_url = models.URLField(blank=True, null=True)
+    
+    # Footer Content
+    footer_bio = models.TextField(max_length=300, blank=True, null=True, 
+        default='Building intelligent software that solves real problems.')
+    footer_copyright = models.CharField(max_length=200, blank=True, null=True, default='All rights reserved.')
+    
+    # Footer Contact Info
+    footer_email = models.EmailField(blank=True, null=True, default='harmonelvis78@gmail.com')
+    footer_phone = models.CharField(max_length=20, blank=True, null=True, default='+1 (555) 123-4567')
+    footer_location = models.CharField(max_length=100, blank=True, null=True, default='San Francisco, CA')
+    
+    # Profile Media - Images on Cloudinary
+    profile_image = CloudinaryField('image', folder='elvis_portfolio/profiles', blank=True, null=True)
+    about_image = CloudinaryField('image', folder='elvis_portfolio/about', blank=True, null=True)
+    
+    # Resume stored in database (BinaryField)
+    resume_pdf = models.BinaryField(blank=True, null=True)
+    resume_filename = models.CharField(max_length=255, blank=True, null=True, default='Elvis_Harmon_CV.pdf')
+    resume_content_type = models.CharField(max_length=100, blank=True, null=True, default='application/pdf')
+    
+    # Meta
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
+        ordering = ['-created_at']
+    
+    def save(self, *args, **kwargs):
+        if not self.slug and self.first_name and self.last_name:
+            self.slug = slugify(f"{self.first_name}-{self.last_name}")
+        if not self.display_name:
+            self.display_name = f"{self.first_name} {self.last_name}"
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.display_name
+    
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    @property
+    def has_resume(self):
+        """Check if resume exists"""
+        return self.resume_pdf is not None
 
 
 class Skill(models.Model):
@@ -184,12 +251,7 @@ class Certification(models.Model):
     expiry_date = models.DateField(blank=True, null=True)
     credential_id = models.CharField(max_length=100, blank=True)
     credential_url = models.URLField(blank=True)
-    certificate_image = models.ImageField(
-        upload_to='certificates/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'pdf'])]
-    )
+    certificate_image = CloudinaryField('image', folder='elvis_portfolio/certificates', blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

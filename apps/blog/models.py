@@ -1,7 +1,6 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.utils.text import slugify
-from django.core.validators import FileExtensionValidator
 from ckeditor.fields import RichTextField
 from django.utils import timezone
 

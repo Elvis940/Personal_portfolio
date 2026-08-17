@@ -6,4 +6,5 @@ app_name = 'core'
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
+    path('download-cv/', views.download_cv, name='download_cv'),
 ]

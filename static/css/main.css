@@ -1601,3 +1601,174 @@ footer.footer ul li i {
         margin-bottom: 1rem;
     }
 }
+
+
+/* ========================================
+   4D STYLING - Additional CSS
+   ======================================== */
+
+
+/* 4D Glow Effects */
+
+.glow-4d {
+    text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
+}
+
+.glow-4d:hover {
+    text-shadow: 0 0 60px rgba(108, 99, 255, 0.5);
+}
+
+
+/* 4D Floating Animation */
+
+.float-4d {
+    animation: float4D 6s ease-in-out infinite;
+}
+
+@keyframes float4D {
+    0%,
+    100% {
+        transform: translateY(0px) translateZ(0);
+    }
+    50% {
+        transform: translateY(-20px) translateZ(20px);
+    }
+}
+
+
+/* 4D Hover Scale */
+
+.scale-4d {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scale-4d:hover {
+    transform: scale(1.05) translateZ(20px);
+}
+
+
+/* 4D Glass Effect */
+
+.glass-4d {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+
+/* 4D Perspective Hover */
+
+.perspective-hover {
+    transition: all 0.4s ease;
+    transform-style: preserve-3d;
+}
+
+.perspective-hover:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) translateZ(10px);
+}
+
+
+/* 4D Shimmer Effect */
+
+.shimmer-4d {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer4D 3s infinite;
+}
+
+@keyframes shimmer4D {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+
+/* Dark Mode 4D Styles */
+
+[data-theme="dark"] .hero-4d {
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 50%, #0a0a1a 100%);
+}
+
+[data-theme="dark"] .particle-4d {
+    background: rgba(108, 99, 255, 0.2);
+}
+
+[data-theme="dark"] .glass-4d {
+    background: rgba(10, 10, 26, 0.6);
+    border-color: rgba(108, 99, 255, 0.2);
+}
+
+[data-theme="dark"] .title-4d {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .welcome-4d {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .description-4d {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+/* 4D Responsive */
+
+@media (max-width: 768px) {
+    .hero-4d {
+        padding: 60px 0 40px;
+        min-height: auto;
+    }
+    .glass-4d {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
+
+/* ========================================
+   Mobile Profile Image Fix
+   ======================================== */
+
+
+/* Hero image wrapper - responsive */
+
+.hero-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+/* Ensure image shows on mobile */
+
+@media (max-width: 768px) {
+    .hero-image-wrapper {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    .col-lg-5.col-md-8.col-sm-10.mx-auto {
+        display: block !important;
+    }
+}
+
+
+/* Mobile hero section adjustments */
+
+@media (max-width: 768px) {
+    .hero-section .row {
+        display: flex;
+        flex-direction: column;
+    }
+    .hero-section .col-lg-7 {
+        order: 2;
+    }
+    .hero-section .col-lg-5 {
+        order: 1;
+    }
+}
