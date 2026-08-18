@@ -45,13 +45,13 @@ problems." }}{% endblock %} {% block content %}
                             <i class="fas fa-briefcase me-2"></i>View My Work
                         </a>
 
-                        {% if profile and profile.resume_pdf %}
-                        <a href="{% url 'core:download_cv' %}" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-file-pdf me-2"></i>Download CV
+                        {% if profile and profile.resume_file %}
+                        <a href="{% url 'core:download_cv' %}" class="btn btn-primary">
+                            <i class="fas fa-file-pdf me-1"></i>Download CV
                         </a>
                         {% else %}
-                        <a href="#" class="btn btn-outline-primary btn-lg" onclick="alert('CV not available yet. Please check back later.')">
-                            <i class="fas fa-file-pdf me-2"></i>Download CV
+                        <a href="#" class="btn btn-primary" onclick="alert('CV not available yet.')">
+                            <i class="fas fa-file-pdf me-1"></i>Download CV
                         </a>
                         {% endif %}
 
