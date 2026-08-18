@@ -85,6 +85,7 @@ def about(request):
         'experiences': experiences,
         'educations': educations,
         'certifications': certifications,
+        'years_experience': 5,  
         'certifications_count': certifications_count,
     }
     
