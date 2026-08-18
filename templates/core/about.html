@@ -1,6 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block title %} About Elvis T. Harmon - Software Engineer {% endblock %} {% block meta_description %} Learn about Elvis T. Harmon, a software engineer with expertise in Django, Python, AI/ML, and full-stack
-development. {% endblock %} {% block content %}
-<section class="section-padding">
+{% extends 'base.html' %} {% load static %} {% block title %}About Elvis T. Harmon - Software Engineer{% endblock %} {% block meta_description %}Learn about Elvis T. Harmon, a software engineer with expertise in Django, Python, AI/ML, and full-stack development.{%
+endblock %} {% block content %}
+<section class="section-padding about-page">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
@@ -10,8 +10,8 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Profile Image and Bio Side by Side -->
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-5">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-5 col-md-8 col-sm-10 mx-auto">
                 <div class="about-image-container">
                     {% if profile and profile.about_image %}
                     <img src="{{ profile.about_image.url }}" alt="{{ profile.display_name }}" class="about-image"> {% else %}
@@ -23,7 +23,7 @@ development. {% endblock %} {% block content %}
                 <h3 class="fw-bold mb-3">Who I Am</h3>
                 {% if profile %}
                 <p class="text-secondary" style="line-height: 1.8;">
-                    I'm <strong>{{ profile.display_name }}</strong>, a passionate software engineer with over 5 years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications
+                    I'm <strong>{{ profile.display_name }}</strong>, a passionate software engineer with over 2+ years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications
                     using Python, Django, and modern cloud technologies.
                 </p>
                 <p class="text-secondary" style="line-height: 1.8;">
@@ -31,8 +31,8 @@ development. {% endblock %} {% block content %}
                 </p>
                 {% else %}
                 <p class="text-secondary" style="line-height: 1.8;">
-                    I'm <strong>Elvis T. Harmon</strong>, a passionate software engineer with over 5 years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications using Python,
-                    Django, and modern cloud technologies.
+                    I'm <strong>Elvis T. Harmon</strong>, a passionate software engineer with over 2+ years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications using
+                    Python, Django, and modern cloud technologies.
                 </p>
                 <p class="text-secondary" style="line-height: 1.8;">
                     My approach combines technical excellence with a deep understanding of user needs, ensuring that every solution I build is not just functional, but truly valuable.
@@ -56,35 +56,35 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Quick Facts -->
-        <div class="row g-4 mt-5">
+        <div class="row g-3 mt-5">
             <div class="col-12">
                 <h3 class="fw-bold text-center mb-4">Quick Facts</h3>
             </div>
             <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-map-marker-alt fa-2x text-primary mb-2"></i>
-                    <h6 class="fw-bold mb-0">
-                        {% if profile %} {{ profile.location }} {% else %} San Francisco, CA {% endif %}
+                    <h6 class="fw-bold mb-0" style="font-size: 0.9rem;">
+                        {% if profile %} {{ profile.location }} {% else %} Kigali, Rwanda {% endif %}
                     </h6>
                     <small class="text-muted">Location</small>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-laptop-code fa-2x text-primary mb-2"></i>
-                    <h6 class="fw-bold mb-0">5+ Years</h6>
+                    <h6 class="fw-bold mb-0">2+ Years</h6>
                     <small class="text-muted">Experience</small>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
                     <h6 class="fw-bold mb-0">B.Sc.</h6>
                     <small class="text-muted">Computer Science</small>
                 </div>
             </div>
             <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
                     <h6 class="fw-bold mb-0">{{ certifications_count }}</h6>
                     <small class="text-muted">Certifications</small>
@@ -95,9 +95,9 @@ development. {% endblock %} {% block content %}
         <!-- Skills Section -->
         <div class="mt-5 pt-4 border-top">
             <h3 class="fw-bold text-center mb-4">My Skills</h3>
-            <div class="row g-4">
+            <div class="row g-3">
                 {% if skill_categories %} {% for category, skills in skill_categories.items %}
-                <div class="col-md-6">
+                <div class="col-md-6 col-lg-4">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">{{ category }}</h5>
@@ -119,7 +119,7 @@ development. {% endblock %} {% block content %}
         <!-- Experience Section -->
         <div class="mt-5 pt-4 border-top">
             <h3 class="fw-bold text-center mb-4">Experience</h3>
-            <div class="row g-4">
+            <div class="row g-3">
                 {% if experiences %} {% for exp in experiences %}
                 <div class="col-12">
                     <div class="card border-0 shadow-sm">
@@ -149,7 +149,7 @@ development. {% endblock %} {% block content %}
         <!-- Education Section -->
         <div class="mt-5 pt-4 border-top">
             <h3 class="fw-bold text-center mb-4">Education</h3>
-            <div class="row g-4">
+            <div class="row g-3">
                 {% if educations %} {% for edu in educations %}
                 <div class="col-md-6">
                     <div class="card border-0 shadow-sm h-100">
@@ -176,13 +176,13 @@ development. {% endblock %} {% block content %}
         <!-- Certifications Section -->
         <div class="mt-5 pt-4 border-top">
             <h3 class="fw-bold text-center mb-4">Certifications</h3>
-            <div class="row g-4">
+            <div class="row g-3">
                 {% if certifications %} {% for cert in certifications %}
-                <div class="col-md-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
                             <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
-                            <h5 class="fw-bold mb-1">{{ cert.name }}</h5>
+                            <h5 class="fw-bold mb-1" style="font-size: 1rem;">{{ cert.name }}</h5>
                             <p class="text-muted small">{{ cert.organization }}</p>
                             <p class="text-secondary small mb-0">
                                 <i class="fas fa-calendar-alt me-1"></i> {{ cert.issue_date|date:"M Y" }}
@@ -211,6 +211,14 @@ development. {% endblock %} {% block content %}
 </section>
 {% endblock %} {% block extra_css %}
 <style>
+    /* ========================================
+       About Page - Mobile Friendly
+       ======================================== */
+    
+    .about-page {
+        padding: 60px 0 80px 0;
+    }
+    
     .about-image-container {
         position: relative;
         width: 100%;
@@ -292,27 +300,84 @@ development. {% endblock %} {% block content %}
         color: white;
         border-color: var(--primary-color);
     }
+    /* ========================================
+       Mobile Responsive
+       ======================================== */
+    
+    @media (max-width: 992px) {
+        .about-page {
+            padding: 40px 0 60px 0;
+        }
+        .about-image-container {
+            max-width: 300px;
+        }
+        .display-4 {
+            font-size: 2.5rem;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .about-page {
+            padding: 30px 0 40px 0;
+        }
+        .about-image-container {
+            max-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+        .display-4 {
+            font-size: 2rem;
+        }
+        .lead {
+            font-size: 1rem;
+        }
+        /* Make text smaller on mobile */
+        .text-secondary {
+            font-size: 0.95rem;
+        }
+        /* Stack cards on mobile */
+        .col-md-4.col-sm-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .about-page {
+            padding: 20px 0 30px 0;
+        }
+        .about-image-container {
+            max-width: 200px;
+        }
+        .display-4 {
+            font-size: 1.8rem;
+        }
+        /* Full width on extra small */
+        .col-md-4.col-sm-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .quick-facts .col-6 {
+            padding: 0 8px;
+        }
+        .quick-facts .text-center.p-3 {
+            padding: 1rem !important;
+        }
+        .quick-facts h6 {
+            font-size: 0.8rem !important;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+    /* Dark Mode */
     
     [data-theme="dark"] .bg-light {
         background-color: var(--bg-secondary) !important;
     }
     
-    @media (max-width: 992px) {
-        .about-image-container {
-            max-width: 350px;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .about-image-container {
-            max-width: 280px;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .about-image-container {
-            max-width: 220px;
-        }
+    [data-theme="dark"] .border {
+        border-color: var(--border-color) !important;
     }
 </style>
 {% endblock %}
