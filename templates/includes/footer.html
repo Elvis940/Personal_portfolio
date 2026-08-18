@@ -3,36 +3,86 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4">
-                <h5 class="fw-bold mb-3">{{ profile.display_name|default:"Elvis T. Harmon" }}</h5>
+                <h5 class="fw-bold mb-3">
+                    <i class="fas fa-code text-primary me-2"></i> {{ profile.display_name|default:"Elvis T. Harmon" }}
+                </h5>
                 <p class="text-light-emphasis">{{ profile.footer_bio|default:"Building intelligent software that solves real problems." }}</p>
                 <div class="social-links">
                     {% if profile.github_url %}
-                    <a href="{{ profile.github_url }}" target="_blank" class="text-white me-3"><i class="fab fa-github fa-lg"></i></a> {% endif %} {% if profile.linkedin_url %}
-                    <a href="{{ profile.linkedin_url }}" target="_blank" class="text-white me-3"><i class="fab fa-linkedin fa-lg"></i></a> {% endif %} {% if profile.twitter_url %}
-                    <a href="{{ profile.twitter_url }}" target="_blank" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a> {% endif %} {% if profile.youtube_url %}
-                    <a href="{{ profile.youtube_url }}" target="_blank" class="text-white"><i class="fab fa-youtube fa-lg"></i></a> {% endif %}
+                    <a href="{{ profile.github_url }}" target="_blank" class="text-white me-3">
+                        <i class="fab fa-github fa-lg"></i>
+                    </a>
+                    {% endif %} {% if profile.linkedin_url %}
+                    <a href="{{ profile.linkedin_url }}" target="_blank" class="text-white me-3">
+                        <i class="fab fa-linkedin fa-lg"></i>
+                    </a>
+                    {% endif %} {% if profile.twitter_url %}
+                    <a href="{{ profile.twitter_url }}" target="_blank" class="text-white me-3">
+                        <i class="fab fa-twitter fa-lg"></i>
+                    </a>
+                    {% endif %} {% if profile.youtube_url %}
+                    <a href="{{ profile.youtube_url }}" target="_blank" class="text-white">
+                        <i class="fab fa-youtube fa-lg"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-md-2">
                 <h6 class="fw-bold mb-3">Quick Links</h6>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'core:home' %}" class="text-light-emphasis text-decoration-none">Home</a></li>
-                    <li><a href="{% url 'core:about' %}" class="text-light-emphasis text-decoration-none">About</a></li>
-                    <li><a href="{% url 'projects:project_list' %}" class="text-light-emphasis text-decoration-none">Projects</a></li>
-                    <li><a href="{% url 'blog:blog_list' %}" class="text-light-emphasis text-decoration-none">Blog</a></li>
+                    <li>
+                        <a href="{% url 'core:home' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'core:about' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>About
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'projects:project_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'blog:blog_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-chevron-right me-1" style="font-size: 10px;"></i>Blog
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-3">
-                <h6 class="fw-bold mb-3">Services</h6>
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-cogs me-2"></i>Services
+                </h6>
                 <ul class="list-unstyled">
-                    <li><a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">Web Development</a></li>
-                    <li><a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">Django Development</a></li>
-                    <li><a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">AI/ML Solutions</a></li>
-                    <li><a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">API Development</a></li>
+                    <li>
+                        <a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-code me-1"></i>Web Development
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fab fa-python me-1"></i>Django Development
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-brain me-1"></i>AI/ML Solutions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'services:service_list' %}" class="text-light-emphasis text-decoration-none">
+                            <i class="fas fa-plug me-1"></i>API Development
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-3">
-                <h6 class="fw-bold mb-3">Contact</h6>
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-address-book me-2"></i>Contact
+                </h6>
                 <ul class="list-unstyled">
                     <li><i class="fas fa-envelope me-2"></i>{{ profile.footer_email|default:"harmonelvis78@gmail.com" }}</li>
                     <li><i class="fas fa-phone me-2"></i>{{ profile.footer_phone|default:"+1 (555) 123-4567" }}</li>
@@ -42,7 +92,11 @@
         </div>
         <hr class="border-light-emphasis mt-4">
         <div class="text-center text-light-emphasis">
-            <small>&copy; {% now "Y" %} {{ profile.display_name|default:"Elvis T. Harmon" }}. {{ profile.footer_copyright|default:"All rights reserved." }}</small>
+            <small>
+                <i class="fas fa-copyright me-1"></i>
+                {% now "Y" %} {{ profile.display_name|default:"Elvis T. Harmon" }}. 
+                {{ profile.footer_copyright|default:"All rights reserved." }}
+            </small>
         </div>
     </div>
 </footer>

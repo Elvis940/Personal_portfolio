@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
+from django.utils import timezone
+from datetime import datetime
 from apps.projects.models import Project, Technology
 from apps.profiles.models import Profile, Skill, Experience, Education, Certification
 from apps.testimonials.models import Testimonial
@@ -42,15 +44,18 @@ def home(request):
     # Get project count
     projects_count = all_projects.count()
     
+    # Calculate years of experience from Experience entries
+    years_experience = calculate_years_experience()
+    
     context = {
         'profile': profile,
         'featured_projects': featured_projects,
-        'projects_count': projects_count,  # This is the count displayed in stats
+        'projects_count': projects_count,
         'technologies_count': technologies_count,
         'featured_skills': featured_skills,
         'recent_experiences': recent_experiences,
         'certifications_count': certifications_count,
-        'years_experience': 5,
+        'years_experience': years_experience,  # Now dynamic
         'testimonials': testimonials,
     }
     
@@ -78,6 +83,9 @@ def about(request):
             skill_categories[category] = []
         skill_categories[category].append(skill)
     
+    # Calculate years of experience
+    years_experience = calculate_years_experience()
+    
     context = {
         'profile': profile,
         'skills': skills,
@@ -85,7 +93,7 @@ def about(request):
         'experiences': experiences,
         'educations': educations,
         'certifications': certifications,
-        'years_experience': 5,  
+        'years_experience': years_experience,
         'certifications_count': certifications_count,
     }
     
@@ -112,3 +120,30 @@ def download_cv(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
+
+def calculate_years_experience():
+    """Calculate total years of experience from Experience entries"""
+    experiences = Experience.objects.all()
+    
+    if not experiences:
+        return 0
+    
+    total_years = 0
+    today = timezone.now().date()
+    
+    for exp in experiences:
+        start = exp.start_date
+        end = exp.end_date if exp.end_date else today
+        
+        # Calculate years between start and end
+        years = end.year - start.year
+        months = end.month - start.month
+        
+        if months < 0:
+            years -= 1
+        
+        total_years += years
+    
+    # Round to nearest integer
+    return round(total_years)

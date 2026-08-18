@@ -3,24 +3,28 @@ from .models import SiteSettings
 
 
 def site_settings(request):
-    """Context processor to add site settings to all templates"""
-    try:
-        settings = SiteSettings.get_settings()
-    except:
-        settings = None
+    """
+    Context processor to add site settings and profile data to all templates.
+    This makes 'site_settings' and 'profile' available in every template.
+    """
+    context = {}
     
-    return {
-        'site_settings': settings,
-    }
-
-
-def site_settings(request):
-    """Context processor to add profile data to all templates"""
+    # Get site settings
+    try:
+        settings = SiteSettings.objects.first()
+        if not settings:
+            # Create default settings if none exist
+            settings = SiteSettings.objects.create()
+        context['site_settings'] = settings
+    except Exception as e:
+        # If there's an error, just set to None
+        context['site_settings'] = None
+    
+    # Get profile data
     try:
         profile = Profile.objects.first()
-    except:
-        profile = None
+        context['profile'] = profile
+    except Exception as e:
+        context['profile'] = None
     
-    return {
-        'profile': profile,
-    }
+    return context

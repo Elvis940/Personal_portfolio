@@ -1,17 +1,17 @@
 {% extends 'base.html' %} {% load static %} {% block title %} About Elvis T. Harmon - Software Engineer {% endblock %} {% block meta_description %} Learn about Elvis T. Harmon, a software engineer with expertise in Django, Python, AI/ML, and full-stack
 development. {% endblock %} {% block content %}
-<section class="section-padding">
+<section class="section-padding" id="about-page">
     <div class="container">
         <div class="row">
-            <div class="col-12 text-center mb-5">
+            <div class="col-12 text-center mb-4 mb-md-5">
                 <h1 class="display-4 fw-bold">About Me</h1>
                 <p class="lead text-secondary">Software Engineer passionate about building intelligent solutions that make a difference.</p>
             </div>
         </div>
 
-        <!-- Profile Image and Bio Side by Side -->
-        <div class="row g-5 align-items-center">
-            <div class="col-lg-5">
+        <!-- Profile Image and Bio -->
+        <div class="row g-4 g-md-5 align-items-center">
+            <div class="col-12 col-md-5 col-lg-5">
                 <div class="about-image-container">
                     {% if profile and profile.about_image %}
                     <img src="{{ profile.about_image.url }}" alt="{{ profile.display_name }}" class="about-image"> {% else %}
@@ -19,20 +19,20 @@ development. {% endblock %} {% block content %}
                     <div class="about-image-frame"></div>
                 </div>
             </div>
-            <div class="col-lg-7">
+            <div class="col-12 col-md-7 col-lg-7">
                 <h3 class="fw-bold mb-3">Who I Am</h3>
                 {% if profile %}
                 <p class="text-secondary" style="line-height: 1.8;">
-                    I'm <strong>{{ profile.display_name }}</strong>, a passionate software engineer with over 5 years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications
-                    using Python, Django, and modern cloud technologies.
+                    I'm <strong>{{ profile.display_name }}</strong>, a passionate software engineer with over {{ years_experience }} years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust,
+                    scalable applications using Python, Django, and modern cloud technologies.
                 </p>
                 <p class="text-secondary" style="line-height: 1.8;">
                     My approach combines technical excellence with a deep understanding of user needs, ensuring that every solution I build is not just functional, but truly valuable.
                 </p>
                 {% else %}
                 <p class="text-secondary" style="line-height: 1.8;">
-                    I'm <strong>Elvis T. Harmon</strong>, a passionate software engineer with over 5 years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable applications using Python,
-                    Django, and modern cloud technologies.
+                    I'm <strong>Elvis T. Harmon</strong>, a passionate software engineer with over {{ years_experience }} years of experience in full-stack development, AI/ML solutions, and enterprise systems. I specialize in building robust, scalable
+                    applications using Python, Django, and modern cloud technologies.
                 </p>
                 <p class="text-secondary" style="line-height: 1.8;">
                     My approach combines technical excellence with a deep understanding of user needs, ensuring that every solution I build is not just functional, but truly valuable.
@@ -56,12 +56,12 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Quick Facts -->
-        <div class="row g-4 mt-5">
+        <div class="row g-3 g-md-4 mt-4 mt-md-5">
             <div class="col-12">
-                <h3 class="fw-bold text-center mb-4">Quick Facts</h3>
+                <h3 class="fw-bold text-center mb-3 mb-md-4">Quick Facts</h3>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+            <div class="col-6 col-md-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-map-marker-alt fa-2x text-primary mb-2"></i>
                     <h6 class="fw-bold mb-0">
                         {% if profile %} {{ profile.location }} {% else %} San Francisco, CA {% endif %}
@@ -69,22 +69,22 @@ development. {% endblock %} {% block content %}
                     <small class="text-muted">Location</small>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+            <div class="col-6 col-md-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-laptop-code fa-2x text-primary mb-2"></i>
-                    <h6 class="fw-bold mb-0">5+ Years</h6>
+                    <h6 class="fw-bold mb-0">{{ years_experience }}+ Years</h6>
                     <small class="text-muted">Experience</small>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+            <div class="col-6 col-md-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
                     <h6 class="fw-bold mb-0">B.Sc.</h6>
                     <small class="text-muted">Computer Science</small>
                 </div>
             </div>
-            <div class="col-md-3 col-6">
-                <div class="text-center p-3 border rounded-3">
+            <div class="col-6 col-md-3">
+                <div class="text-center p-3 border rounded-3 h-100">
                     <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
                     <h6 class="fw-bold mb-0">{{ certifications_count }}</h6>
                     <small class="text-muted">Certifications</small>
@@ -93,11 +93,11 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Skills Section -->
-        <div class="mt-5 pt-4 border-top">
+        <div class="mt-5 pt-3 pt-md-4 border-top">
             <h3 class="fw-bold text-center mb-4">My Skills</h3>
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 {% if skill_categories %} {% for category, skills in skill_categories.items %}
-                <div class="col-md-6">
+                <div class="col-12 col-md-6">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">{{ category }}</h5>
@@ -117,14 +117,14 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Experience Section -->
-        <div class="mt-5 pt-4 border-top">
+        <div class="mt-5 pt-3 pt-md-4 border-top">
             <h3 class="fw-bold text-center mb-4">Experience</h3>
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 {% if experiences %} {% for exp in experiences %}
                 <div class="col-12">
                     <div class="card border-0 shadow-sm">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start">
                                 <div>
                                     <h5 class="fw-bold mb-1">{{ exp.position }}</h5>
                                     <h6 class="text-primary mb-2">{{ exp.organization }}</h6>
@@ -147,11 +147,11 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Education Section -->
-        <div class="mt-5 pt-4 border-top">
+        <div class="mt-5 pt-3 pt-md-4 border-top">
             <h3 class="fw-bold text-center mb-4">Education</h3>
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 {% if educations %} {% for edu in educations %}
-                <div class="col-md-6">
+                <div class="col-12 col-md-6">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body">
                             <h5 class="fw-bold mb-1">{{ edu.degree }}</h5>
@@ -174,11 +174,11 @@ development. {% endblock %} {% block content %}
         </div>
 
         <!-- Certifications Section -->
-        <div class="mt-5 pt-4 border-top">
+        <div class="mt-5 pt-3 pt-md-4 border-top">
             <h3 class="fw-bold text-center mb-4">Certifications</h3>
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 {% if certifications %} {% for cert in certifications %}
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-md-4">
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-body text-center">
                             <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
@@ -211,6 +211,12 @@ development. {% endblock %} {% block content %}
 </section>
 {% endblock %} {% block extra_css %}
 <style>
+    /* About Page Styles */
+    
+    #about-page .section-padding {
+        padding: 60px 0;
+    }
+    
     .about-image-container {
         position: relative;
         width: 100%;
@@ -296,6 +302,7 @@ development. {% endblock %} {% block content %}
     [data-theme="dark"] .bg-light {
         background-color: var(--bg-secondary) !important;
     }
+    /* Mobile Responsive */
     
     @media (max-width: 992px) {
         .about-image-container {
@@ -307,11 +314,44 @@ development. {% endblock %} {% block content %}
         .about-image-container {
             max-width: 280px;
         }
+        #about-page .section-padding {
+            padding: 40px 0;
+        }
+        .display-4 {
+            font-size: 2.2rem;
+        }
+        .lead {
+            font-size: 1rem;
+        }
     }
     
     @media (max-width: 576px) {
         .about-image-container {
             max-width: 220px;
+        }
+        #about-page .section-padding {
+            padding: 30px 0;
+        }
+        .display-4 {
+            font-size: 1.8rem;
+        }
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+        }
+        /* Stack quick facts on mobile */
+        .col-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        /* Make cards full width on mobile */
+        .col-12.col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .col-12.col-sm-6.col-md-4 {
+            flex: 0 0 100%;
+            max-width: 100%;
         }
     }
 </style>
