@@ -1,0 +1,75 @@
+{% extends 'dashboard/base_dashboard.html' %} {% load static %} {% block title %}Edit Education - Admin Panel{% endblock %} {% block page_title %}Edit Education{% endblock %} {% block content %}
+<div class="container-fluid px-4">
+    <div class="dashboard-card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Institution <span class="text-danger">*</span></label>
+                            <input type="text" name="institution" class="form-control" value="{{ education.institution }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Degree <span class="text-danger">*</span></label>
+                            <input type="text" name="degree" class="form-control" value="{{ education.degree }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Field of Study</label>
+                            <input type="text" name="field_of_study" class="form-control" value="{{ education.field_of_study|default:'' }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check mt-4">
+                                <input type="checkbox" name="is_current" class="form-check-input" {% if education.is_current %}checked{% endif %}>
+                                <label class="form-check-label">Currently Studying</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                            <input type="date" name="start_date" class="form-control" value="{{ education.start_date|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="date" name="end_date" class="form-control" value="{{ education.end_date|date:'Y-m-d'|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">GPA</label>
+                            <input type="number" name="gpa" class="form-control" step="0.01" min="0" max="4.0" value="{{ education.gpa|default:'' }}">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label class="form-label">Achievements</label>
+                            <textarea name="achievements" class="form-control" rows="3">{{ education.achievements|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-1"></i>Update Education
+                    </button>
+                    <a href="{% url 'dashboard:education' %}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
